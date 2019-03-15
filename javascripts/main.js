@@ -9,8 +9,9 @@ http.createServer(function (req, res) {
     if (req.url == '/fileuploaded') {
         var form = new formidable.IncomingForm();
         form.parse(req, function (err, fields, files) {
+            var email = fields.email;
             var oldpath = files.filetoupload.path;
-            var newpath = 'C:/Users/Chetan/Desktop/EFSstorage/' + files.filetoupload.name;
+            var newpath = 'C:/Users/Chetan/Desktop/EFSstorage/' + email + '/' + files.filetoupload.name;
             fs.rename(oldpath, newpath, function (err) {
                 if (err) throw err;
                 fs.readFile('./html/fileUploaded.html', function (err, data) {
@@ -48,7 +49,6 @@ http.createServer(function (req, res) {
         });
     } else if (req.url == '/registerSuccess') {
         //insertInCollection.js
-        var filename = 'registerSuccess.html';
         var form = new formidable.IncomingForm();
         var emailInput;
         var passwordInput;
@@ -63,17 +63,15 @@ http.createServer(function (req, res) {
                 var myobj = { _id: emailInput, password: passwordInput };
                 dbo.collection("users").insertOne(myobj, function (err, res) {
                     if (err) {
-                        filename = 'registerFailed.html';
                         console.log('email already exists');
                     } else {
                         console.log("1 document inserted");
                         db.close();
                     }
                 });
-                
             });
         });
-        fs.readFile('./html/'+filename, function (err, data) {
+        fs.readFile('./html/registerSuccess.html', function (err, data) {
             res.writeHead(200, { 'Content-Type': 'text/html' });
             res.write(data);
             res.end();
