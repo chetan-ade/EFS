@@ -77,6 +77,37 @@ http.createServer(function (req, res) {
             res.end();
             mkdirp('C:/Users/Chetan/Desktop/EFSstorage/' + emailInput);
         });
+    } else if (req.url == '/loginSuccess') {
+        //insertInCollection.js
+        console.log('login success...');
+        var form = new formidable.IncomingForm();
+        var emailInput;
+        var passwordInput;
+        form.parse(req, function (err, fields, files) {
+            emailInput = fields.email;
+            passwordInput = fields.password;
+            // console.log("Email: ", emailInput);
+            // console.log("password: ", passwordInput);
+            // MongoClient.connect(url, function (err, db) {
+            //     if (err) throw err;
+            //     var dbo = db.db("EFSDB");
+            //     var myobj = { _id: emailInput, password: passwordInput };
+            //     dbo.collection("users").insertOne(myobj, function (err, res) {
+            //         if (err) {
+            //             console.log('email already exists');
+            //         } else {
+            //             console.log("1 document inserted");
+            //             db.close();
+            //         }
+            //     });
+            // });
+        });
+        fs.readFile('./html/loginSuccess.html', function (err, data) {
+            res.writeHead(200, { 'Content-Type': 'text/html' });
+            res.write(data);
+            res.end();
+            // mkdirp('C:/Users/Chetan/Desktop/EFSstorage/' + emailInput);
+        });
     }
 }).listen(8080);
 
