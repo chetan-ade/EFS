@@ -1,6 +1,7 @@
 var http = require('http');
 var formidable = require('formidable');
 var fs = require('fs');
+var mkdirp = require('mkdirp');
 var MongoClient = require('mongodb').MongoClient;
 const url = "mongodb+srv://chetanade:improve619619@efs-zym9f.azure.mongodb.net/test?retryWrites=true";
 
@@ -47,27 +48,36 @@ http.createServer(function (req, res) {
         });
     } else if (req.url == '/registerSuccess') {
         //insertInCollection.js
+        var filename = 'registerSuccess.html';
         var form = new formidable.IncomingForm();
+        var emailInput;
+        var passwordInput;
         form.parse(req, function (err, fields, files) {
-            var emailInput = fields.email;
-            var passwordInput = fields.password;
+            emailInput = fields.email;
+            passwordInput = fields.password;
             // console.log("Email: ", emailInput);
             // console.log("password: ", passwordInput);
             MongoClient.connect(url, function (err, db) {
                 if (err) throw err;
                 var dbo = db.db("EFSDB");
-                var myobj = { email: emailInput, password: passwordInput };
+                var myobj = { _id: emailInput, password: passwordInput };
                 dbo.collection("users").insertOne(myobj, function (err, res) {
-                    if (err) throw err;
-                    console.log("1 document inserted");
-                    db.close();
+                    if (err) {
+                        filename = 'registerFailed.html';
+                        console.log('email already exists');
+                    } else {
+                        console.log("1 document inserted");
+                        db.close();
+                    }
                 });
+                
             });
-            fs.readFile('./html/registerSuccess.html', function (err, data) {
-                res.writeHead(200, { 'Content-Type': 'text/html' });
-                res.write(data);
-                res.end();
-            });
+        });
+        fs.readFile('./html/'+filename, function (err, data) {
+            res.writeHead(200, { 'Content-Type': 'text/html' });
+            res.write(data);
+            res.end();
+            mkdirp('C:/Users/Chetan/Desktop/EFSstorage/' + emailInput);
         });
     }
 }).listen(8080);
