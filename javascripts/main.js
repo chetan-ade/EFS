@@ -1,6 +1,8 @@
 var http = require('http');
 var formidable = require('formidable');
 var fs = require('fs');
+var MongoClient = require('mongodb').MongoClient;
+const url = "mongodb+srv://chetanade:improve619619@efs-zym9f.azure.mongodb.net/test?retryWrites=true";
 
 http.createServer(function (req, res) {
     if (req.url == '/fileuploaded') {
@@ -26,6 +28,7 @@ http.createServer(function (req, res) {
             res.end();
           });
     } else if (req.url == '/') {
+        //main page
         fs.readFile('./html/main.html', function(err, data) {
             res.writeHead(200, {'Content-Type': 'text/html'});
             res.write(data);
@@ -43,6 +46,27 @@ http.createServer(function (req, res) {
             res.write(data);
             res.end();
           });
+    } else if (req.url == '/registerSuccess') {
+        //insertInCollection.js
+        MongoClient.connect(url, function(err, db) {
+          if (err) throw err;
+          var dbo = db.db("EFSDB");
+        //   var email = form.email;
+        //   var password = form.password;
+        //   console.log(email,password);
+          var myobj = { email: "Chetan", password: "qwer" };
+          dbo.collection("users").insertOne(myobj, function(err, res) {
+            if (err) throw err;
+            console.log("1 document inserted");
+            db.close();
+          });
+        }); 
+
+        fs.readFile('./html/registerSuccess.html', function(err, data) {
+            res.writeHead(200, {'Content-Type': 'text/html'});
+            res.write(data);
+            res.end();
+          });
     }
 }).listen(8080);
 
@@ -55,8 +79,6 @@ http.createServer(function (req, res) {
 
 
 
-// var MongoClient = require('mongodb').MongoClient;
-// const url = "mongodb+srv://chetanade:improve619619@efs-zym9f.azure.mongodb.net/test?retryWrites=true";
 
 //insertInCollection.js
 // MongoClient.connect(url, function(err, db) {
