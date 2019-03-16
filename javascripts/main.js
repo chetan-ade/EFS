@@ -12,17 +12,18 @@ http.createServer(function (req, res) {
             var email = fields.email;
             var oldpath = files.filetoupload.path;
             var newpath = 'C:/Users/Chetan/Desktop/EFSstorage/' + email + '/' + files.filetoupload.name;
-            MongoClient.connect(url, function(err, db) {
+            console.log('1 file uploaded to filesystem');
+            MongoClient.connect(url, function (err, db) {
                 if (err) throw err;
                 var dbo = db.db("EFSDB");
-                var myquery = { _id : email };
-                var newvalues = { $push : {filesOwned: files.filetoupload.name } };
-                dbo.collection("users").updateOne(myquery, newvalues, function(err, res) {
-                  if (err) throw err;
-                  console.log("1 document updated");
-                  db.close();
+                var myquery = { _id: email };
+                var newvalues = { $push: { filesOwned: files.filetoupload.name } };
+                dbo.collection("users").updateOne(myquery, newvalues, function (err, res) {
+                    if (err) throw err;
+                    console.log('1 file added to filesOwned');
+                    db.close();
                 });
-            }); 
+            });
             fs.rename(oldpath, newpath, function (err) {
                 if (err) throw err;
                 fs.readFile('./html/fileUploaded.html', function (err, data) {
@@ -59,34 +60,10 @@ http.createServer(function (req, res) {
             res.end();
         });
     } else if (req.url == '/registerSuccess') {
-        //insertInCollection.js
-        var form = new formidable.IncomingForm();
-        var emailInput;
-        var passwordInput;
-        form.parse(req, function (err, fields, files) {
-            emailInput = fields.email;
-            passwordInput = fields.password;
-            // console.log("Email: ", emailInput);
-            // console.log("password: ", passwordInput);
-            MongoClient.connect(url, function (err, db) {
-                if (err) throw err;
-                var dbo = db.db("EFSDB");
-                var myobj = { _id: emailInput, password: passwordInput};//,filesOwned: [] };
-                dbo.collection("users").insertOne(myobj, function (err, res) {
-                    if (err) {
-                        console.log('email already exists');
-                    } else {
-                        console.log("1 document inserted");
-                        db.close();
-                    }
-                });
-            });
-        });
         fs.readFile('./html/registerSuccess.html', function (err, data) {
             res.writeHead(200, { 'Content-Type': 'text/html' });
             res.write(data);
             res.end();
-            mkdirp('C:/Users/Chetan/Desktop/EFSstorage/' + emailInput);
         });
     } else if (req.url == '/loginSuccess') {
         //insertInCollection.js
@@ -97,32 +74,57 @@ http.createServer(function (req, res) {
         form.parse(req, function (err, fields, files) {
             emailInput = fields.email;
             passwordInput = fields.password;
-            // console.log("Email: ", emailInput);
-            // console.log("password: ", passwordInput);
-            // MongoClient.connect(url, function (err, db) {
-            //     if (err) throw err;
-            //     var dbo = db.db("EFSDB");
-            //     var myobj = { _id: emailInput, password: passwordInput };
-            //     dbo.collection("users").insertOne(myobj, function (err, res) {
-            //         if (err) {
-            //             console.log('email already exists');
-            //         } else {
-            //             console.log("1 document inserted");
-            //             db.close();
-            //         }
-            //     });
-            // });
         });
         fs.readFile('./html/uploadFile.html', function (err, data) {
             res.writeHead(200, { 'Content-Type': 'text/html' });
             res.write(data);
-            // res.write(emailInput);
-            res.write('<input type="hidden" name="email" value="'+emailInput+'">');
+            res.write('<input type="hidden" name="email" value="' + emailInput + '">');
             res.write('</form>');
             res.write('</body>');
             res.write('</html>');
             res.end();
-            // mkdirp('C:/Users/Chetan/Desktop/EFSstorage/' + emailInput);
+        });
+    } else if (req.url == '/registerCheck') {
+        console.log('checking register..');
+        var form = new formidable.IncomingForm();
+        var emailInput;
+        var passwordInput;
+        form.parse(req, function (err, fields, files) {
+            emailInput = fields.email;
+            passwordInput = fields.password;
+            MongoClient.connect(url, function (err, db) {
+                if (err) throw err;
+                var dbo = db.db("EFSDB");
+                dbo.collection("users").findOne({ _id: emailInput }, function (err, result) {
+                    if (err) throw err;
+                    if (result === null) {
+                        console.log('new user');
+                        mkdirp('C:/Users/Chetan/Desktop/EFSstorage/' + emailInput);
+                        var myobj = { _id: emailInput, password: passwordInput };
+                        dbo.collection("users").insertOne(myobj, function (err, res) {
+                            if (err) {
+                                console.log('email already exists');
+                            } else {
+                                console.log("1 user added");
+                                db.close();
+                            }
+                        });
+                        res.writeHead(301,{ Location: './registerSuccess'});
+                        res.end();
+                    } else {
+                        console.log('email already exists..');
+                        res.writeHead(301,{ Location: './registerFailed'});
+                        res.end();
+                    }
+                    db.close();
+                });
+            });
+        });
+    } else if(req.url == '/registerFailed') {
+        fs.readFile('./html/registerFailed.html', function (err, data) {
+            res.writeHead(200, { 'Content-Type': 'text/html' });
+            res.write(data);
+            res.end();
         });
     }
 }).listen(8080);
