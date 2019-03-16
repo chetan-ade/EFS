@@ -52,7 +52,14 @@ http.createServer(function (req, res) {
                                 res.write(data);
                                 res.write('<input type="hidden" name="email" value="' + emailInput + '">');
                                 res.write('</form>');
+                                res.write('<h3>Files Owned</h3>');
+                                // res.write(""+result.filesOwned);
+                                for(var i = 0; i<result.filesOwned.length; i++) {
+                                    res.write(""+result.filesOwned[i]);
+                                    res.write('<br><br>');
+                                }
                                 res.write('</body>');
+                                res.write('<script>alert("login successfully");</script>');
                                 res.write('</html>');
                                 res.end();
                             });
@@ -176,10 +183,29 @@ http.createServer(function (req, res) {
             });
             fs.rename(oldpath, newpath, function (err) {
                 if (err) throw err;
-                fs.readFile('./html/fileUploaded.html', function (err, data) {
-                    res.writeHead(200, { 'Content-Type': 'text/html' });
-                    res.write(data);
-                    res.end();
+                MongoClient.connect(url,{ useNewUrlParser: true },function (err, db) {
+                    if (err) throw err;
+                    var dbo = db.db("EFSDB");
+                    dbo.collection("users").findOne({ _id: email }, function (err, result) {
+                        if (err) throw err;
+                                fs.readFile('./html/uploadFile.html', function (err, data) {
+                                    res.writeHead(200, { 'Content-Type': 'text/html' });
+                                    res.write(data);
+                                    res.write('<input type="hidden" name="email" value="' + emailInput + '">');
+                                    res.write('</form>');
+                                    res.write('<h3>Files Owned</h3>');
+                                    // res.write(""+result.filesOwned);
+                                    for(var i = 0; i<result.filesOwned.length; i++) {
+                                        res.write(""+result.filesOwned[i]);
+                                        res.write('<br><br>');
+                                    }
+                                    res.write('</body>');
+                                    res.write('<script>alert("file uploaded successfully");</script>');
+                                    res.write('</html>');
+                                    res.end();
+                                });
+                        db.close();
+                    });
                 });
             });
         });
