@@ -12,6 +12,17 @@ http.createServer(function (req, res) {
             var email = fields.email;
             var oldpath = files.filetoupload.path;
             var newpath = 'C:/Users/Chetan/Desktop/EFSstorage/' + email + '/' + files.filetoupload.name;
+            MongoClient.connect(url, function(err, db) {
+                if (err) throw err;
+                var dbo = db.db("EFSDB");
+                var myquery = { _id : email };
+                var newvalues = { $push : {filesOwned: files.filetoupload.name } };
+                dbo.collection("users").updateOne(myquery, newvalues, function(err, res) {
+                  if (err) throw err;
+                  console.log("1 document updated");
+                  db.close();
+                });
+            }); 
             fs.rename(oldpath, newpath, function (err) {
                 if (err) throw err;
                 fs.readFile('./html/fileUploaded.html', function (err, data) {
@@ -60,7 +71,7 @@ http.createServer(function (req, res) {
             MongoClient.connect(url, function (err, db) {
                 if (err) throw err;
                 var dbo = db.db("EFSDB");
-                var myobj = { _id: emailInput, password: passwordInput };
+                var myobj = { _id: emailInput, password: passwordInput};//,filesOwned: [] };
                 dbo.collection("users").insertOne(myobj, function (err, res) {
                     if (err) {
                         console.log('email already exists');
@@ -79,7 +90,7 @@ http.createServer(function (req, res) {
         });
     } else if (req.url == '/loginSuccess') {
         //insertInCollection.js
-        console.log('login success...');
+        // console.log('login success...');
         var form = new formidable.IncomingForm();
         var emailInput;
         var passwordInput;
@@ -102,9 +113,14 @@ http.createServer(function (req, res) {
             //     });
             // });
         });
-        fs.readFile('./html/loginSuccess.html', function (err, data) {
+        fs.readFile('./html/uploadFile.html', function (err, data) {
             res.writeHead(200, { 'Content-Type': 'text/html' });
             res.write(data);
+            // res.write(emailInput);
+            res.write('<input type="hidden" name="email" value="'+emailInput+'">');
+            res.write('</form>');
+            res.write('</body>');
+            res.write('</html>');
             res.end();
             // mkdirp('C:/Users/Chetan/Desktop/EFSstorage/' + emailInput);
         });
