@@ -2,47 +2,46 @@ var http = require('http');
 var formidable = require('formidable');
 var fs = require('fs');
 var mkdirp = require('mkdirp');
+var download = require('download-file');
 var MongoClient = require('mongodb').MongoClient;
 const url = "mongodb+srv://chetanade:improve619619@efs-zym9f.azure.mongodb.net/test?retryWrites=true";
 
 http.createServer(function (req, res) {
-    
-    if (req.url == '/') 
-    {
+
+    if (req.url == '/') {
         //main page
         fs.readFile('./html/main.html', function (err, data) {
             res.writeHead(200, { 'Content-Type': 'text/html' });
             res.write(data);
             res.end();
         });
-    } 
-    else if (req.url == '/login') 
-    {
+    }
+    else if (req.url == '/login') {
         //when login button on main page is clicked
         fs.readFile('./html/login.html', function (err, data) {
             res.writeHead(200, { 'Content-Type': 'text/html' });
             res.write(data);
             res.end();
         });
-    } 
-    else if (req.url == '/loginCheck') 
-    {
+    }
+    else if (req.url == '/loginCheck') {
         //successfull login
         console.log('Checking login...');
         var form = new formidable.IncomingForm();
         var emailInput;
         var passwordInput;
+        var filename;
         form.parse(req, function (err, fields, files) {
             emailInput = fields.email;
             passwordInput = fields.password;
-            MongoClient.connect(url,{ useNewUrlParser: true },function (err, db) {
+            MongoClient.connect(url, { useNewUrlParser: true }, function (err, db) {
                 if (err) throw err;
                 var dbo = db.db("EFSDB");
                 dbo.collection("users").findOne({ _id: emailInput }, function (err, result) {
                     if (err) throw err;
                     if (result === null) {
                         console.log('user email does not exists.');
-                        res.writeHead(301,{ Location: './loginFailed'});
+                        res.writeHead(301, { Location: './loginFailed' });
                         res.end();
                     } else {
                         if ((result._id == emailInput) && (result.password == passwordInput)) {
@@ -54,10 +53,13 @@ http.createServer(function (req, res) {
                                 res.write('</form>');
                                 res.write('<h3>Files Owned</h3>');
                                 // res.write(""+result.filesOwned);
-                                for(var i = 0; i<result.filesOwned.length; i++) {
-                                    res.write(""+result.filesOwned[i]);
+                                res.write('<form action="./downloadFile" method="post" enctype="multipart/form-data">');
+                                for (var i = 0; i < result.filesOwned.length; i++) {
+                                    filename = result.filesOwned[i];
+                                    res.write('<input type="submit" name="' + filename + '" value="' + filename + '"/>');
                                     res.write('<br><br>');
                                 }
+                                res.write('</form');
                                 res.write('</body>');
                                 res.write('<script>alert("login successfully");</script>');
                                 res.write('</html>');
@@ -66,36 +68,43 @@ http.createServer(function (req, res) {
                         }
                         else {
                             console.log('wrong password');
-                            res.writeHead(301,{ Location: './loginFailed'});
-                            res.end(); 
+                            res.writeHead(301, { Location: './loginFailed' });
+                            res.end();
                         }
                     }
                     db.close();
                 });
             });
-        }); 
-    } 
-    else if(req.url == '/loginFailed') 
-    {
+        });
+    }
+    else if (req.url == '/loginFailed') {
         //login failed... email/password already exists
-        fs.readFile('./html/loginFailed.html', function (err, data) {
+        fs.readFile('./html/login.html', function (err, data) {
             res.writeHead(200, { 'Content-Type': 'text/html' });
             res.write(data);
+            res.write('<script>alert("login failed...Wrong email or password.");</script>');
             res.end();
         });
     }
 
-    else if (req.url == '/register') 
-    {
+    else if (req.url == '/register') {
         //when register button on main page is clicked
         fs.readFile('./html/register.html', function (err, data) {
             res.writeHead(200, { 'Content-Type': 'text/html' });
             res.write(data);
             res.end();
         });
-    } 
-    else if (req.url == '/registerCheck') 
-    {
+    }
+    else if (req.url == '/registerAgain') {
+        //when register button on main page is clicked
+        fs.readFile('./html/register.html', function (err, data) {
+            res.writeHead(200, { 'Content-Type': 'text/html' });
+            res.write(data);
+            res.write('<script>alert("email already exists");</script>');
+            res.end();
+        });
+    }
+    else if (req.url == '/registerCheck') {
         //checking if the email is already present
         console.log('checking register..');
         var form = new formidable.IncomingForm();
@@ -104,7 +113,7 @@ http.createServer(function (req, res) {
         form.parse(req, function (err, fields, files) {
             emailInput = fields.email;
             passwordInput = fields.password;
-            MongoClient.connect(url,{ useNewUrlParser: true },function (err, db) {
+            MongoClient.connect(url, { useNewUrlParser: true }, function (err, db) {
                 if (err) throw err;
                 var dbo = db.db("EFSDB");
                 dbo.collection("users").findOne({ _id: emailInput }, function (err, result) {
@@ -112,7 +121,7 @@ http.createServer(function (req, res) {
                     if (result === null) {
                         console.log('new email');
                         mkdirp('C:/Users/Chetan/Desktop/EFSstorage/' + emailInput);
-                        console.log("1 user's dir created")
+                        console.log("1 user's dir created");
                         var myobj = { _id: emailInput, password: passwordInput };
                         dbo.collection("users").insertOne(myobj, function (err, res) {
                             if (err) {
@@ -122,47 +131,37 @@ http.createServer(function (req, res) {
                                 db.close();
                             }
                         });
-                        res.writeHead(301,{ Location: './registerSuccess'});
+                        res.writeHead(301, { Location: './registerSuccess' });
                         res.end();
                     } else {
                         console.log('email already exists..');
-                        res.writeHead(301,{ Location: './registerFailed'});
+                        res.writeHead(301, { Location: './registerAgain' });
                         res.end();
                     }
                     db.close();
                 });
             });
         });
-    } 
-    else if (req.url == '/registerSuccess') 
-    {
+    }
+    else if (req.url == '/registerSuccess') {
         //successful registeration
-        fs.readFile('./html/registerSuccess.html', function (err, data) {
+        fs.readFile('./html/main.html', function (err, data) {
             res.writeHead(200, { 'Content-Type': 'text/html' });
             res.write(data);
-            res.end();
-        });
-    } 
-    else if(req.url == '/registerFailed') 
-    {
-        //register failed... email already present
-        fs.readFile('./html/registerFailed.html', function (err, data) {
-            res.writeHead(200, { 'Content-Type': 'text/html' });
-            res.write(data);
+            res.write('<script>alert("registered successfully");</script>');
             res.end();
         });
     }
-    else if (req.url == '/uploadFile') 
-    {
+
+    else if (req.url == '/uploadFile') {
         //File upload form
         fs.readFile('./html/uploadFile.html', function (err, data) {
             res.writeHead(200, { 'Content-Type': 'text/html' });
             res.write(data);
             res.end();
         });
-    } 
-    else if (req.url == '/fileuploaded') 
-    {
+    }
+    else if (req.url == '/fileuploaded') {
         //file successfully uploaded
         var form = new formidable.IncomingForm();
         form.parse(req, function (err, fields, files) {
@@ -170,7 +169,7 @@ http.createServer(function (req, res) {
             var oldpath = files.filetoupload.path;
             var newpath = 'C:/Users/Chetan/Desktop/EFSstorage/' + email + '/' + files.filetoupload.name;
             console.log('1 file uploaded to filesystem');
-            MongoClient.connect(url,{ useNewUrlParser: true }, function (err, db) {
+            MongoClient.connect(url, { useNewUrlParser: true }, function (err, db) {
                 if (err) throw err;
                 var dbo = db.db("EFSDB");
                 var myquery = { _id: email };
@@ -183,32 +182,38 @@ http.createServer(function (req, res) {
             });
             fs.rename(oldpath, newpath, function (err) {
                 if (err) throw err;
-                MongoClient.connect(url,{ useNewUrlParser: true },function (err, db) {
+                MongoClient.connect(url, { useNewUrlParser: true }, function (err, db) {
                     if (err) throw err;
                     var dbo = db.db("EFSDB");
                     dbo.collection("users").findOne({ _id: email }, function (err, result) {
                         if (err) throw err;
-                                fs.readFile('./html/uploadFile.html', function (err, data) {
-                                    res.writeHead(200, { 'Content-Type': 'text/html' });
-                                    res.write(data);
-                                    res.write('<input type="hidden" name="email" value="' + emailInput + '">');
-                                    res.write('</form>');
-                                    res.write('<h3>Files Owned</h3>');
-                                    // res.write(""+result.filesOwned);
-                                    for(var i = 0; i<result.filesOwned.length; i++) {
-                                        res.write(""+result.filesOwned[i]);
-                                        res.write('<br><br>');
-                                    }
-                                    res.write('</body>');
-                                    res.write('<script>alert("file uploaded successfully");</script>');
-                                    res.write('</html>');
-                                    res.end();
-                                });
+                        fs.readFile('./html/uploadFile.html', function (err, data) {
+                            res.writeHead(200, { 'Content-Type': 'text/html' });
+                            res.write(data);
+                            res.write('<input type="hidden" name="email" value="' + emailInput + '">');
+                            res.write('</form>');
+                            res.write('<h3>Files Owned</h3>');
+                            // res.write(""+result.filesOwned);
+                            res.write('<form action="./downloadFile" method="post" enctype="multipart/form-data">');
+                            for (var i = 0; i < result.filesOwned.length; i++) {
+                                filename = result.filesOwned[i];
+                                res.write('<input type="submit" name="' + filename + '" value="' + filename + '"/>');
+                                res.write('<br><br>');
+                            }
+                            res.write('</form');
+                            res.write('</body>');
+                            res.write('<script>alert("file uploaded successfully");</script>');
+                            res.write('</html>');
+                            res.end();
+                        });
                         db.close();
                     });
                 });
             });
         });
+    }
+    else if (req.url == '/downloadFile') {
+
     }
 }).listen(8080);
 
