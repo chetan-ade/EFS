@@ -2,7 +2,6 @@ var http = require('http');
 var formidable = require('formidable');
 var fs = require('fs');
 var mkdirp = require('mkdirp');
-var download = require('download-file');
 var MongoClient = require('mongodb').MongoClient;
 const url = "mongodb+srv://chetanade:improve619619@efs-zym9f.azure.mongodb.net/test?retryWrites=true";
 
@@ -54,9 +53,10 @@ http.createServer(function (req, res) {
                                 res.write('<h3>Files Owned</h3>');
                                 // res.write(""+result.filesOwned);
                                 res.write('<form action="./downloadFile" method="post" enctype="multipart/form-data">');
+                                res.write('<input type="hidden" name="email" value="' + emailInput + '">');
                                 for (var i = 0; i < result.filesOwned.length; i++) {
                                     filename = result.filesOwned[i];
-                                    res.write('<input type="submit" name="' + filename + '" value="' + filename + '"/>');
+                                    res.write('<input type="submit" name="filename" value="' + filename + '"/>');
                                     res.write('<br><br>');
                                 }
                                 res.write('</form');
@@ -166,9 +166,6 @@ http.createServer(function (req, res) {
         var form = new formidable.IncomingForm();
         form.parse(req, function (err, fields, files) {
             var email = fields.email;
-            var oldpath = files.filetoupload.path;
-            var newpath = 'C:/Users/Chetan/Desktop/EFSstorage/' + email + '/' + files.filetoupload.name;
-            console.log('1 file uploaded to filesystem');
             MongoClient.connect(url, { useNewUrlParser: true }, function (err, db) {
                 if (err) throw err;
                 var dbo = db.db("EFSDB");
@@ -180,6 +177,10 @@ http.createServer(function (req, res) {
                     db.close();
                 });
             });
+            var oldpath = files.filetoupload.path;
+            var newpath = 'C:/Users/Chetan/Desktop/EFSstorage/' + email + '/' + files.filetoupload.name;
+            console.log('1 file uploaded to filesystem');
+
             fs.rename(oldpath, newpath, function (err) {
                 if (err) throw err;
                 MongoClient.connect(url, { useNewUrlParser: true }, function (err, db) {
@@ -195,13 +196,16 @@ http.createServer(function (req, res) {
                             res.write('<h3>Files Owned</h3>');
                             // res.write(""+result.filesOwned);
                             res.write('<form action="./downloadFile" method="post" enctype="multipart/form-data">');
+                            res.write('<input type="hidden" name="email" value="' + emailInput + '">');
+                            console.log(result);
                             for (var i = 0; i < result.filesOwned.length; i++) {
                                 filename = result.filesOwned[i];
-                                res.write('<input type="submit" name="' + filename + '" value="' + filename + '"/>');
+                                res.write('<input type="submit" name="filename" value="' + filename + '"/>');
                                 res.write('<br><br>');
                             }
                             res.write('</form');
                             res.write('</body>');
+                            console.log('file uploaded successfully');
                             res.write('<script>alert("file uploaded successfully");</script>');
                             res.write('</html>');
                             res.end();
@@ -213,7 +217,20 @@ http.createServer(function (req, res) {
         });
     }
     else if (req.url == '/downloadFile') {
-
+        var form = new formidable.IncomingForm();
+        form.parse(req, function (err, fields, files) {
+            var email = fields.email;
+            var filename = fields.filename;
+            console.log(email);
+            console.log(filename);
+            var filepath = 'C:/Users/Chetan/Desktop/EFSstorage/' + email + '/' + filename;
+            console.log(filepath);
+            fs.readFile(filepath, function (err, data) {
+                res.writeHead(200, { 'Content-Disposition': 'attachment;filename='+filename});
+                res.write(data);
+                res.end();
+            });
+        });
     }
 }).listen(8080);
 
