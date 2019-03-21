@@ -233,36 +233,3 @@ http.createServer(function (req, res) {
         });
     }
 }).listen(8080);
-
-
-
-
-
-
-
-
-
-
-
-//insertInCollection.js
-// MongoClient.connect(url, function(err, db) {
-//   if (err) throw err;
-//   var dbo = db.db("EFSDB");
-//   var myobj = { name: "Chetan", address: "aa 37" };
-//   dbo.collection("users").insertOne(myobj, function(err, res) {
-//     if (err) throw err;
-//     console.log("1 document inserted");
-//     db.close();
-//   });
-// }); 
-
-// createCollection.js▐
-// MongoClient.connect(url, function(err, db) {
-//   if (err) throw err;
-//   var dbo = db.db("EFSDB");
-//   dbo.createCollection("users", function(err, res) {
-//     if (err) throw err;
-//     console.log("Collection created!");
-//     db.close();
-//   });
-// }); 
