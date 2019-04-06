@@ -142,7 +142,7 @@ http.createServer(function (req, res) {
                     if (err) throw err;
                     if (result === null) {
                         console.log('new email');
-                        mkdirp('C:/Users/Chetan/Desktop/EFSstorage/' + emailInput);
+                        mkdirp('C:/Users/Chetan/Desktop/EFS/storage/' + emailInput);
                         console.log("1 user's dir created");
                         var myobj = {
                             _id: emailInput,
@@ -215,7 +215,7 @@ http.createServer(function (req, res) {
                 });
             });
             var oldpath = files.filetoupload.path;
-            var newpath = 'C:/Users/Chetan/Desktop/EFSstorage/' + email + '/' + files.filetoupload.name;
+            var newpath = 'C:/Users/Chetan/Desktop/EFS/storage/' + email + '/' + files.filetoupload.name;
             console.log('1 file uploaded to filesystem');
 
             fs.rename(oldpath, newpath, function (err) {
@@ -269,9 +269,9 @@ http.createServer(function (req, res) {
             var filename = fields.filename;
             console.log(email);
             console.log(filename);
-            var filepath = 'C:/Users/Chetan/Desktop/EFSstorage/' + email + '/' + filename;
+            var filepath = 'C:/Users/Chetan/Desktop/EFS/storage/' + email + '/' + filename;
             console.log(filepath);
-            var newfilepath = 'C:/Users/Chetan/Desktop/EFSstorage/' + email + '/' + 'DEC'+filename;
+            var newfilepath = 'C:/Users/Chetan/Desktop/EFS/storage/' + email + '/' + 'DEC'+filename;
             encryptor.decryptFile(filepath, newfilepath, key, function(err) {
                 // Decryption complete.
               });
