@@ -66,7 +66,7 @@ http.createServer(function (req, res) {
                                 // res.write(""+result.filesOwned);
                                 res.write('<form action="./downloadFile" method="post" enctype="multipart/form-data">');
                                 res.write('<input type="hidden" name="email" value="' + emailInput + '">');
-                                if(result.filesOwned != undefined) {
+                                if (result.filesOwned != undefined) {
                                     for (var i = 0; i < result.filesOwned.length; i++) {
                                         filename = result.filesOwned[i];
                                         res.write('<input type="submit" name="filename" value="' + filename + '"/>');
@@ -213,54 +213,53 @@ http.createServer(function (req, res) {
                     console.log('1 file added to filesOwned');
                     db.close();
                 });
-            });
-            var oldpath = files.filetoupload.path;
-            var newpath = 'C:/Users/Chetan/Desktop/EFS/storage/' + email + '/' + files.filetoupload.name;
-            console.log('1 file uploaded to filesystem');
-
-            fs.rename(oldpath, newpath, function (err) {
-                if (err) throw err;
-                MongoClient.connect(url, {
-                    useNewUrlParser: true
-                }, function (err, db) {
+                var oldpath = files.filetoupload.path;
+                var newpath = 'C:/Users/Chetan/Desktop/EFS/storage/' + email + '/' + files.filetoupload.name;
+                console.log('1 file uploaded to filesystem');
+                fs.rename(oldpath, newpath, function (err) {
                     if (err) throw err;
-                    var dbo = db.db("EFSDB");
-                    dbo.collection("users").findOne({
-                        _id: email
-                    }, function (err, result) {
+                    MongoClient.connect(url, {
+                        useNewUrlParser: true
+                    }, function (err, db) {
                         if (err) throw err;
-                        fs.readFile('./html/uploadFile.html', function (err, data) {
-                            res.writeHead(200, {
-                                'Content-Type': 'text/html'
+                        var dbo = db.db("EFSDB");
+                        dbo.collection("users").findOne({
+                            _id: email
+                        }, function (err, result) {
+                            if (err) throw err;
+                            fs.readFile('./html/uploadFile.html', function (err, data) {
+                                res.writeHead(200, {
+                                    'Content-Type': 'text/html'
+                                });
+                                res.write(data);
+                                res.write('<input type="hidden" name="email" value="' + email + '">');
+                                res.write('</form>');
+                                res.write('<h3>Files Owned</h3>');
+                                // res.write(""+result.filesOwned);
+                                res.write('<form action="./downloadFile" method="post" enctype="multipart/form-data">');
+                                res.write('<input type="hidden" name="email" value="' + email + '">');
+                                console.log(result);
+                                for (var i = 0; i < result.filesOwned.length; i++) {
+                                    filename = result.filesOwned[i];
+                                    res.write('<input type="submit" name="filename" value="' + filename + '"/>');
+                                    res.write('<br><br>');
+                                }
+                                res.write('</form');
+                                res.write('</body>');
+                                console.log('file uploaded successfully');
+                                res.write('<script>alert("file uploaded successfully");</script>');
+                                res.write('</html>');
+                                res.end();
                             });
-                            res.write(data);
-                            res.write('<input type="hidden" name="email" value="' + emailInput + '">');
-                            res.write('</form>');
-                            res.write('<h3>Files Owned</h3>');
-                            // res.write(""+result.filesOwned);
-                            res.write('<form action="./downloadFile" method="post" enctype="multipart/form-data">');
-                            res.write('<input type="hidden" name="email" value="' + emailInput + '">');
-                            console.log(result);
-                            for (var i = 0; i < result.filesOwned.length; i++) {
-                                filename = result.filesOwned[i];
-                                res.write('<input type="submit" name="filename" value="' + filename + '"/>');
-                                res.write('<br><br>');
-                            }
-                            res.write('</form');
-                            res.write('</body>');
-                            console.log('file uploaded successfully');
-                            res.write('<script>alert("file uploaded successfully");</script>');
-                            res.write('</html>');
-                            res.end();
+                            db.close();
                         });
-                        db.close();
                     });
                 });
             });
-            // Encrypt file.
-            encryptor.encryptFile(newpath,newpath, key, function(err) {
-                // Encryption complete.
-            });
+            // // Encrypt file.
+            // encryptor.encryptFile(newpath,newpath, key, function(err) {
+            //     // Encryption complete.
+            // });
         });
     } else if (req.url == '/downloadFile') {
         var form = new formidable.IncomingForm();
@@ -271,11 +270,11 @@ http.createServer(function (req, res) {
             console.log(filename);
             var filepath = 'C:/Users/Chetan/Desktop/EFS/storage/' + email + '/' + filename;
             console.log(filepath);
-            var newfilepath = 'C:/Users/Chetan/Desktop/EFS/storage/' + email + '/' + 'DEC'+filename;
-            encryptor.decryptFile(filepath, newfilepath, key, function(err) {
-                // Decryption complete.
-              });
-            fs.readFile(newfilepath, function (err, data) {
+            var newfilepath = 'C:/Users/Chetan/Desktop/EFS/storage/' + email + '/' + 'DEC' + filename;
+            // encryptor.decryptFile(filepath, newfilepath, key, function(err) {
+            //     // Decryption complete.
+            //   });
+            fs.readFile(filepath, function (err, data) {
                 res.writeHead(200, {
                     'Content-Disposition': 'attachment;filename=' + filename
                 });

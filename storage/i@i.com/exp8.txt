@@ -1,0 +1,7 @@
+S->AaAb|BbBa
+A->e
+B->e
+hiii
+hii
+hi
+h

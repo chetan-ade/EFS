@@ -1,6 +1,0 @@
-2018-09-17 18:24:34 ERROR  : ERROR:  table "employee" does not exist
-2018-11-19 17:42:26 ERROR  : ERROR:  syntax error at or near "{"
-LINE 2: {
-        ^
-2018-11-19 17:44:12 ERROR  : ERROR:  duplicate key value violates unique constraint "emp_pkey"
-DETAIL:  Key (eid)=(2) already exists.
