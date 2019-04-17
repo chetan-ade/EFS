@@ -81,7 +81,13 @@ http.createServer(function (req, res) {
                                 if (result.filesOwned != undefined) {
                                     res.write('<form action="./shareFile" method="post" enctype="multipart/form-data">');
                                     res.write('<input type="hidden" name="email" value="' + emailInput + '">');
-                                    res.write('<input type="text" name="filetoshare" placeholder="Enter file name to share">');
+                                    // res.write('<input type="text" name="filetoshare" placeholder="Enter file name to share">');
+                                    res.write('<h4>Enter File to Share</h4>');
+                                    res.write('<select name="filetoshare">');
+                                    for (var i = 0; i < result.filesOwned.length; i++) {
+                                        res.write('<option value="' + result.filesOwned[i] + '">' + result.filesOwned[i] + '</option>');
+                                    }
+                                    res.write('</select>');
                                     res.write('<br>');
                                     res.write('<br>');
                                     res.write('<input type="text" name="persontoshare" placeholder="Enter email address">');
@@ -89,8 +95,7 @@ http.createServer(function (req, res) {
                                     res.write('<br>');
                                     res.write('<input type="submit" >');
                                     res.write('</form>');
-                                }
-                                else {
+                                } else {
                                     res.write('<h5>No files available to share<h5>');
                                 }
                                 res.write('<h3>Files Shared With Me</h3>');
@@ -281,7 +286,13 @@ http.createServer(function (req, res) {
                                 if (result.filesOwned != undefined) {
                                     res.write('<form action="./shareFile" method="post" enctype="multipart/form-data">');
                                     res.write('<input type="hidden" name="email" value="' + email + '">');
-                                    res.write('<input type="text" name="filetoshare" placeholder="Enter file name to share">');
+                                    // res.write('<input type="text" name="filetoshare" placeholder="Enter file name to share">');
+                                    res.write('<h4>Enter File to Share</h4>');
+                                    res.write('<select name="filetoshare">');
+                                    for (var i = 0; i < result.filesOwned.length; i++) {
+                                        res.write('<option value="' + result.filesOwned[i] + '">' + result.filesOwned[i] + '</option>');
+                                    }
+                                    res.write('</select>');
                                     res.write('<br>');
                                     res.write('<br>');
                                     res.write('<input type="text" name="persontoshare" placeholder="Enter email address">');
@@ -289,8 +300,7 @@ http.createServer(function (req, res) {
                                     res.write('<br>');
                                     res.write('<input type="submit" >');
                                     res.write('</form>');
-                                }
-                                else {
+                                } else {
                                     res.write('<h5>No files available to share<h5>');
                                 }
                                 res.write('<h3>Files Shared With Me</h3>');
