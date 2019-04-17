@@ -367,6 +367,10 @@ http.createServer(function (req, res) {
                     });
                     res.write(data);
                     res.end();
+                    fs.unlink(newfilepath, function (err) {
+                        if (err) throw err;
+                        console.log('Plain File deleted!');
+                    });
                 });
               });
             
