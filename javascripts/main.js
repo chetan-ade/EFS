@@ -229,8 +229,11 @@ http.createServer(function (req, res) {
         //file successfully uploaded
         var form = new formidable.IncomingForm();
         var newfilepath;
+        console.log('INSIDE FILE UPLOADED FUNCTION');
         form.parse(req, function (err, fields, files) {
             var email = fields.email;
+            console.log('email of owner of file: ', email);
+            console.log('file name: ', files.filetoupload.name);
             MongoClient.connect(url, {
                 useNewUrlParser: true
             }, function (err, db) {
@@ -252,6 +255,8 @@ http.createServer(function (req, res) {
 
                 var oldpath = files.filetoupload.path;
                 newfilepath = 'C:/Users/Chetan/Desktop/EFS/storage/' + email + '/' + files.filetoupload.name;
+                console.log('oldpath: ', oldpath);
+                console.log('newfilepath: ', newfilepath);
                 fs.rename(oldpath, newfilepath, function (err) {
                     if (err) throw err;
                     MongoClient.connect(url, {
@@ -326,13 +331,17 @@ http.createServer(function (req, res) {
                         });
                     });
                 });
-                // // Encrypt file.
-                // var newfilepathDAT = newfilepath.split(".")[0] + '.dat';
-                // encryptor.encryptFile(newfilepath, newfilepathDAT, key, function (err) {
-                //     console.log('file encrypted');
-                //     console.log('source: ',newfilepath);
-                //     console.log('dest: ',newfilepathDAT);
-                // });
+                // Encrypt file.
+                var newfilepathDAT = newfilepath.split(".")[0] + '.' + newfilepath.split(".")[1] + '.dat';
+                encryptor.encryptFile(newfilepath, newfilepathDAT, key, function (err) {
+                    console.log('file encrypted');
+                    console.log('source: ', newfilepath);
+                    console.log('dest: ', newfilepathDAT);
+                    fs.unlink(newfilepath, function (err) {
+                        if (err) throw err;
+                        console.log('Plain File deleted!');
+                    });
+                });
             });
 
         });
@@ -341,21 +350,26 @@ http.createServer(function (req, res) {
         form.parse(req, function (err, fields, files) {
             var email = fields.email;
             var filename = fields.filename;
+            var filenameFH = filename.split('.')[0];
+            var extension = filename.split('.')[1];
             console.log(email);
             console.log(filename);
-            var filepath = 'C:/Users/Chetan/Desktop/EFS/storage/' + email + '/' + filename;
+            console.log(filenameFH);
+            console.log(extension);
+            var filepath = 'C:/Users/Chetan/Desktop/EFS/storage/' + email + '/' + filenameFH + '.dat';
             console.log(filepath);
-            var newfilepath = 'C:/Users/Chetan/Desktop/EFS/storage/' + email + '/' + 'DEC' + filename;
-            // encryptor.decryptFile(filepath, newfilepath, key, function(err) {
-            //     // Decryption complete.
-            //   });
-            fs.readFile(filepath, function (err, data) {
-                res.writeHead(200, {
-                    'Content-Disposition': 'attachment;filename=' + filename
+            var newfilepath = 'C:/Users/Chetan/Desktop/EFS/storage/' + email + '/' + filename;
+            console.log(newfilepath);
+            encryptor.decryptFile(filepath, newfilepath, key, function(err) {
+                fs.readFile(newfilepath, function (err, data) {
+                    res.writeHead(200, {
+                        'Content-Disposition': 'attachment;filename=' + filename
+                    });
+                    res.write(data);
+                    res.end();
                 });
-                res.write(data);
-                res.end();
-            });
+              });
+            
         });
     } else if (req.url == '/shareFile') {
         var form = new formidable.IncomingForm();
