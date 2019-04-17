@@ -326,22 +326,23 @@ http.createServer(function (req, res) {
                                 res.write('<script>alert("file uploaded successfully");</script>');
                                 res.write('</html>');
                                 res.end();
+                                // Encrypt file.
+                                var newfilepathDAT = newfilepath.split(".")[0] + '.' + newfilepath.split(".")[1] + '.dat';
+                                encryptor.encryptFile(newfilepath, newfilepathDAT, key, function (err) {
+                                    console.log('file encrypted');
+                                    console.log('source: ', newfilepath);
+                                    console.log('dest: ', newfilepathDAT);
+                                    fs.unlink(newfilepath, function (err) {
+                                        if (err) throw err;
+                                        console.log('Plain File deleted!');
+                                    });
+                                });
                             });
                             db.close();
                         });
                     });
                 });
-                // Encrypt file.
-                var newfilepathDAT = newfilepath.split(".")[0] + '.' + newfilepath.split(".")[1] + '.dat';
-                encryptor.encryptFile(newfilepath, newfilepathDAT, key, function (err) {
-                    console.log('file encrypted');
-                    console.log('source: ', newfilepath);
-                    console.log('dest: ', newfilepathDAT);
-                    fs.unlink(newfilepath, function (err) {
-                        if (err) throw err;
-                        console.log('Plain File deleted!');
-                    });
-                });
+
             });
 
         });
@@ -360,7 +361,7 @@ http.createServer(function (req, res) {
             console.log(filepath);
             var newfilepath = 'C:/Users/Chetan/Desktop/EFS/storage/' + email + '/' + filename;
             console.log(newfilepath);
-            encryptor.decryptFile(filepath, newfilepath, key, function(err) {
+            encryptor.decryptFile(filepath, newfilepath, key, function (err) {
                 fs.readFile(newfilepath, function (err, data) {
                     res.writeHead(200, {
                         'Content-Disposition': 'attachment;filename=' + filename
@@ -372,8 +373,8 @@ http.createServer(function (req, res) {
                         console.log('Plain File deleted!');
                     });
                 });
-              });
-            
+            });
+
         });
     } else if (req.url == '/shareFile') {
         var form = new formidable.IncomingForm();
