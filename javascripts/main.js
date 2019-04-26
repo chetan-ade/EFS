@@ -74,7 +74,7 @@ http.createServer(function (req, res) {
                                     }
                                     res.write('</form>');
                                 } else {
-                                    res.write('<h1>No files uploaded...</h1>');
+                                    res.write('<h4>No files uploaded...</h1>');
                                 }
                                 res.write('<h3>Files Sharing</h3>');
                                 res.write('<br>');
@@ -96,7 +96,7 @@ http.createServer(function (req, res) {
                                     res.write('<input type="submit" >');
                                     res.write('</form>');
                                 } else {
-                                    res.write('<h5>No files available to share<h5>');
+                                    res.write('<h4>No files available to share<h5>');
                                 }
                                 res.write('<h3>Files Shared With Me</h3>');
                                 res.write('<form action="./downloadSharedFile" method="post" enctype="multipart/form-data">');
@@ -109,7 +109,7 @@ http.createServer(function (req, res) {
                                     }
                                     res.write('</form>');
                                 } else {
-                                    res.write('<h1>No files shared with me...</h1>');
+                                    res.write('<h4>No files shared with me...</h1>');
                                 }
                                 res.write('</body>');
                                 res.write('<script>alert("login successfully");</script>');
@@ -306,7 +306,7 @@ http.createServer(function (req, res) {
                                     res.write('<input type="submit" >');
                                     res.write('</form>');
                                 } else {
-                                    res.write('<h5>No files available to share<h5>');
+                                    res.write('<h4>No files available to share<h5>');
                                 }
                                 res.write('<h3>Files Shared With Me</h3>');
                                 res.write('<form action="./downloadSharedFile" method="post" enctype="multipart/form-data">');
@@ -319,7 +319,7 @@ http.createServer(function (req, res) {
                                     }
                                     res.write('</form>');
                                 } else {
-                                    res.write('<h1>No files shared with me...</h1>');
+                                    res.write('<h4>No files shared with me...</h1>');
                                 }
                                 res.write('</body>');
                                 console.log('file uploaded successfully');
@@ -416,21 +416,30 @@ http.createServer(function (req, res) {
             var file = fields.filename;
             var filename = file.split(':')[0];
             var email = file.split(':')[1];
+            var filenameFH = filename.split('.')[0];
+            var extension = filename.split('.')[1];
             console.log(email);
             console.log(filename);
-            var filepath = 'C:/Users/Chetan/Desktop/EFS/storage/' + email + '/' + filename;
+            console.log(filenameFH);
+            console.log(extension);
+            var filepath = 'C:/Users/Chetan/Desktop/EFS/storage/' + email + '/' + filenameFH + '.dat';
             console.log(filepath);
-            var newfilepath = 'C:/Users/Chetan/Desktop/EFS/storage/' + email + '/' + 'DEC' + filename;
-            // encryptor.decryptFile(filepath, newfilepath, key, function(err) {
-            //     // Decryption complete.
-            //   });
-            fs.readFile(filepath, function (err, data) {
-                res.writeHead(200, {
-                    'Content-Disposition': 'attachment;filename=' + filename
+            var newfilepath = 'C:/Users/Chetan/Desktop/EFS/storage/' + email + '/' + filename;
+            console.log(newfilepath);
+            encryptor.decryptFile(filepath, newfilepath, key, function (err) {
+                fs.readFile(newfilepath, function (err, data) {
+                    res.writeHead(200, {
+                        'Content-Disposition': 'attachment;filename=' + filename
+                    });
+                    res.write(data);
+                    res.end();
+                    fs.unlink(newfilepath, function (err) {
+                        if (err) throw err;
+                        console.log('Plain File deleted!');
+                    });
                 });
-                res.write(data);
-                res.end();
             });
+
         });
     }
 }).listen(8080);
