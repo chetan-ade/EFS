@@ -6,11 +6,11 @@ var MongoClient = require('mongodb').MongoClient;
 const url = "mongodb+srv://chetanade:improve619619@efs-zym9f.azure.mongodb.net/test?retryWrites=true";
 var encryptor = require('file-encryptor');
 var key = 'My Super Secret Key';
+console.log("Go to http://localhost:8080/")
 
 http.createServer(function (req, res) {
 
     if (req.url == '/') {
-        //main page
         fs.readFile('./html/main.html', function (err, data) {
             res.writeHead(200, {
                 'Content-Type': 'text/html'
@@ -29,7 +29,7 @@ http.createServer(function (req, res) {
         });
     } else if (req.url == '/loginCheck') {
         //successfull login
-        console.log('Checking login...');
+        console.log('\nChecking login...');
         var form = new formidable.IncomingForm();
         var emailInput;
         var passwordInput;
@@ -159,7 +159,7 @@ http.createServer(function (req, res) {
         });
     } else if (req.url == '/registerCheck') {
         //checking if the email is already present
-        console.log('checking register..');
+        console.log('\nchecking register..');
         var form = new formidable.IncomingForm();
         var emailInput;
         var passwordInput;
@@ -177,7 +177,7 @@ http.createServer(function (req, res) {
                     if (err) throw err;
                     if (result === null) {
                         console.log('new email');
-                        mkdirp('C:/Users/Chetan/Desktop/EFS/storage/' + emailInput);
+                        mkdirp('./storage/' + emailInput);
                         console.log("1 user's dir created");
                         var myobj = {
                             _id: emailInput,
@@ -229,7 +229,7 @@ http.createServer(function (req, res) {
         //file successfully uploaded
         var form = new formidable.IncomingForm();
         var newfilepath;
-        console.log('INSIDE FILE UPLOADED FUNCTION');
+        console.log('\nINSIDE FILE UPLOADED FUNCTION');
         form.parse(req, function (err, fields, files) {
             var email = fields.email;
             console.log('email of owner of file: ', email);
@@ -254,7 +254,7 @@ http.createServer(function (req, res) {
                 });
 
                 var oldpath = files.filetoupload.path;
-                newfilepath = 'C:/Users/Chetan/Desktop/EFS/storage/' + email + '/' + files.filetoupload.name;
+                newfilepath = './storage/' + email + '/' + files.filetoupload.name;
                 console.log('oldpath: ', oldpath);
                 console.log('newfilepath: ', newfilepath);
                 fs.rename(oldpath, newfilepath, function (err) {
@@ -327,7 +327,9 @@ http.createServer(function (req, res) {
                                 res.write('</html>');
                                 res.end();
                                 // Encrypt file.
-                                var newfilepathDAT = newfilepath.split(".")[0] + '.' + newfilepath.split(".")[1] + '.dat';
+                                // console.log("NEWFILEPATH:", newfilepath)
+                                // console.log(newfilepath.split("."))
+                                var newfilepathDAT = '.' + newfilepath.split(".")[1] + '.' + newfilepath.split(".")[2] + '.dat';
                                 encryptor.encryptFile(newfilepath, newfilepathDAT, key, function (err) {
                                     console.log('file encrypted');
                                     console.log('source: ', newfilepath);
@@ -347,20 +349,22 @@ http.createServer(function (req, res) {
 
         });
     } else if (req.url == '/downloadFile') {
+        console.log("\nINSIDE DOWNLOAD FILE FUNCTION")
         var form = new formidable.IncomingForm();
         form.parse(req, function (err, fields, files) {
             var email = fields.email;
-            var filename = fields.filename;
+            var filename = fields.filename.split(':')[0]
             var filenameFH = filename.split('.')[0];
-            var extension = filename.split('.')[1];
-            console.log(email);
-            console.log(filename);
-            console.log(filenameFH);
-            console.log(extension);
-            var filepath = 'C:/Users/Chetan/Desktop/EFS/storage/' + email + '/' + filenameFH + '.dat';
-            console.log(filepath);
-            var newfilepath = 'C:/Users/Chetan/Desktop/EFS/storage/' + email + '/' + filename;
-            console.log(newfilepath);
+            var filenameSH = filename.split('.')[1]
+            var extension = filenameSH.split(':')[0];
+            console.log("Email:", email);
+            console.log("filename:", filename);
+            console.log("filenameFH:", filenameFH);
+            console.log("extension:", extension);
+            var filepath = './storage/' + email + '/' + filenameFH + '.dat';
+            console.log("Filepath:", filepath);
+            var newfilepath = './storage/' + email + '/' + filename;
+            console.log("NewFilePath:", newfilepath);
             encryptor.decryptFile(filepath, newfilepath, key, function (err) {
                 fs.readFile(newfilepath, function (err, data) {
                     res.writeHead(200, {
@@ -377,14 +381,15 @@ http.createServer(function (req, res) {
 
         });
     } else if (req.url == '/shareFile') {
+        console.log("\nINSIDE SHARE FILE FUNCTION")
         var form = new formidable.IncomingForm();
         form.parse(req, function (err, fields, files) {
             var owner = fields.email;
             var filename = fields.filetoshare;
             var persontoshare = fields.persontoshare;
-            console.log(owner);
-            console.log(filename);
-            console.log(persontoshare);
+            console.log("Owner:", owner);
+            console.log("Filename:", filename);
+            console.log("PersonToShareWith:", persontoshare);
             MongoClient.connect(url, {
                 useNewUrlParser: true
             }, function (err, db) {
@@ -411,21 +416,23 @@ http.createServer(function (req, res) {
         res.write('<script>alert("shared successfully");</script>');
         res.end();
     } else if (req.url == '/downloadSharedFile') {
+        console.log("\nINSIDE DOWNLOAD SHARED FILE FUNCTION")
         var form = new formidable.IncomingForm();
         form.parse(req, function (err, fields, files) {
             var file = fields.filename;
             var filename = file.split(':')[0];
             var email = file.split(':')[1];
             var filenameFH = filename.split('.')[0];
-            var extension = filename.split('.')[1];
-            console.log(email);
-            console.log(filename);
-            console.log(filenameFH);
-            console.log(extension);
-            var filepath = 'C:/Users/Chetan/Desktop/EFS/storage/' + email + '/' + filenameFH + '.dat';
-            console.log(filepath);
-            var newfilepath = 'C:/Users/Chetan/Desktop/EFS/storage/' + email + '/' + filename;
-            console.log(newfilepath);
+            var filenameSH = filename.split('.')[1]
+            var extension = filenameSH.split(':')[0];
+            console.log("email:", email);
+            console.log("filename:", filename);
+            console.log("filenameFH:", filenameFH);
+            console.log("extension:", extension);
+            var filepath = './storage/' + email + '/' + filenameFH + '.dat';
+            console.log("Filepath:", filepath);
+            var newfilepath = './storage/' + email + '/' + filename;
+            console.log("NewFilePath:", newfilepath);
             encryptor.decryptFile(filepath, newfilepath, key, function (err) {
                 fs.readFile(newfilepath, function (err, data) {
                     res.writeHead(200, {
