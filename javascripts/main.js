@@ -6,11 +6,13 @@ var MongoClient = require('mongodb').MongoClient;
 const url = "mongodb+srv://chetanade:improve619619@efs-zym9f.azure.mongodb.net/test?retryWrites=true";
 var encryptor = require('file-encryptor');
 var key = 'My Super Secret Key';
+
 console.log("Go to http://localhost:8080/")
 
 http.createServer(function (req, res) {
 
     if (req.url == '/') {
+        //Home Page
         fs.readFile('./html/main.html', function (err, data) {
             res.writeHead(200, {
                 'Content-Type': 'text/html'
@@ -18,6 +20,7 @@ http.createServer(function (req, res) {
             res.write(data);
             res.end();
         });
+
     } else if (req.url == '/login') {
         //when login button on main page is clicked
         fs.readFile('./html/login.html', function (err, data) {
@@ -34,6 +37,7 @@ http.createServer(function (req, res) {
         var emailInput;
         var passwordInput;
         var filename;
+
         form.parse(req, function (err, fields, files) {
             emailInput = fields.email;
             passwordInput = fields.password;
@@ -111,8 +115,14 @@ http.createServer(function (req, res) {
                                 } else {
                                     res.write('<h4>No files shared with me...</h1>');
                                 }
+                                res.write('<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>');
+                                res.write('<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>');
+                                res.write('<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>');
                                 res.write('</body>');
-                                res.write('<script>alert("login successfully");</script>');
+                                // res.write('<script>alert("login successfully");</script>');
+                                res.write('<div class="alert alert-success" role="alert">');
+                                res.write('Logged in Successfully');
+                                res.write('</div>');
                                 res.write('</html>');
                                 res.end();
                             });
@@ -128,6 +138,7 @@ http.createServer(function (req, res) {
                 });
             });
         });
+
     } else if (req.url == '/loginFailed') {
         //login failed... email/password already exists
         fs.readFile('./html/login.html', function (err, data) {
@@ -135,9 +146,13 @@ http.createServer(function (req, res) {
                 'Content-Type': 'text/html'
             });
             res.write(data);
-            res.write('<script>alert("login failed...Wrong email or password.");</script>');
+            // res.write('<script>alert("login failed...Wrong email or password.");</script>');
+            res.write('<div class="alert alert-danger" role="alert">');
+            res.write('Logged failed... Wrong email or password');
+            res.write('</div>');
             res.end();
         });
+
     } else if (req.url == '/register') {
         //when register button on main page is clicked
         fs.readFile('./html/register.html', function (err, data) {
@@ -147,6 +162,7 @@ http.createServer(function (req, res) {
             res.write(data);
             res.end();
         });
+
     } else if (req.url == '/registerAgain') {
         //when register button on main page is clicked
         fs.readFile('./html/register.html', function (err, data) {
@@ -154,9 +170,13 @@ http.createServer(function (req, res) {
                 'Content-Type': 'text/html'
             });
             res.write(data);
-            res.write('<script>alert("email already exists");</script>');
+            // res.write('<script>alert("email already exists");</script>');
+            res.write('<div class="alert alert-danger" role="alert">');
+            res.write('Email Already Exists');
+            res.write('</div>');
             res.end();
         });
+
     } else if (req.url == '/registerCheck') {
         //checking if the email is already present
         console.log('\nchecking register..');
@@ -206,6 +226,7 @@ http.createServer(function (req, res) {
                 });
             });
         });
+
     } else if (req.url == '/registerSuccess') {
         //successful registeration
         fs.readFile('./html/main.html', function (err, data) {
@@ -213,9 +234,13 @@ http.createServer(function (req, res) {
                 'Content-Type': 'text/html'
             });
             res.write(data);
-            res.write('<script>alert("registered successfully");</script>');
+            // res.write('<script>alert("registered successfully");</script>');
+            res.write('<div class="alert alert-success" role="alert">');
+            res.write('Registered Successfully');
+            res.write('</div>');
             res.end();
         });
+
     } else if (req.url == '/uploadFile') {
         //File upload form
         fs.readFile('./html/uploadFile.html', function (err, data) {
@@ -225,6 +250,7 @@ http.createServer(function (req, res) {
             res.write(data);
             res.end();
         });
+
     } else if (req.url == '/fileuploaded') {
         //file successfully uploaded
         var form = new formidable.IncomingForm();
@@ -321,9 +347,15 @@ http.createServer(function (req, res) {
                                 } else {
                                     res.write('<h4>No files shared with me...</h1>');
                                 }
+                                res.write('<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>');
+                                res.write('<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>');
+                                res.write('<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>');
                                 res.write('</body>');
                                 console.log('file uploaded successfully');
-                                res.write('<script>alert("file uploaded successfully");</script>');
+                                // res.write('<script>alert("file uploaded successfully");</script>');
+                                res.write('<div class="alert alert-success" role="alert">');
+                                res.write('File Uploaded Successfully');
+                                res.write('</div>');
                                 res.write('</html>');
                                 res.end();
                                 // Encrypt file.
@@ -380,6 +412,7 @@ http.createServer(function (req, res) {
             });
 
         });
+
     } else if (req.url == '/shareFile') {
         console.log("\nINSIDE SHARE FILE FUNCTION")
         var form = new formidable.IncomingForm();
@@ -413,8 +446,13 @@ http.createServer(function (req, res) {
                 });
             });
         });
-        res.write('<script>alert("shared successfully");</script>');
+
+        // res.write('<script>alert("shared successfully");</script>');
+        res.write('<div class="alert alert-success" role="alert">');
+        res.write('File Shared Successfully');
+        res.write('</div>');
         res.end();
+
     } else if (req.url == '/downloadSharedFile') {
         console.log("\nINSIDE DOWNLOAD SHARED FILE FUNCTION")
         var form = new formidable.IncomingForm();
