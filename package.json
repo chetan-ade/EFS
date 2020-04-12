@@ -1,0 +1,31 @@
+{
+  "name": "efs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "javascripts/main.js",
+  "dependencies": {
+    "bootstrap": "^4.3.1",
+    "cryptr": "^6.0.2",
+    "download-file": "^0.1.5",
+    "file-encryptor": "^0.1.1",
+    "formidable": "^1.2.1",
+    "fs": "^0.0.1-security",
+    "http": "^0.0.0",
+    "mkdirp": "^0.5.1",
+    "mongodb": "^3.5.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chetan-ade/EFS.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chetan-ade/EFS/issues"
+  },
+  "homepage": "https://github.com/chetan-ade/EFS#readme"
+}

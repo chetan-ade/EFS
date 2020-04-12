@@ -8,6 +8,7 @@ var encryptor = require('file-encryptor');
 var key = 'My Super Secret Key';
 
 console.log("Go to http://localhost:8080/")
+encryptEverything = false
 
 http.createServer(function (req, res) {
 
