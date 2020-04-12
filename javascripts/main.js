@@ -148,7 +148,10 @@ http.createServer(function (req, res) {
                                 res.write('<span aria-hidden="true">&times;</span>');
                                 res.write('</button>');
                                 res.write('</div>');
-                                res.write('</html>');
+                                // res.write('<div style="position: fixed; top:58%;left: 37.4%; width: 25.3%; text-align: center;color: green;">');
+                                // res.write('Logged in Successfully');
+                                // res.write('</div>');
+                                // res.write('</html>');
                                 res.end();
                             });
                         } else {
@@ -171,11 +174,14 @@ http.createServer(function (req, res) {
                 'Content-Type': 'text/html'
             });
             res.write(data);
-            res.write('<div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-left:20px ; margin-right: 20px;">');
-            res.write('Login failed... Wrong email or password');
-            res.write('<button type="button" class="close" data-dismiss="alert" aria-label="Close">');
-            res.write('<span aria-hidden="true">&times;</span>');
-            res.write('</button>');
+            // res.write('<div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-left:20px ; margin-right: 20px;">');
+            // res.write('Login failed... Wrong email or password');
+            // res.write('<button type="button" class="close" data-dismiss="alert" aria-label="Close">');
+            // res.write('<span aria-hidden="true">&times;</span>');
+            // res.write('</button>');
+            // res.write('</div>');
+            res.write('<div id="message" style="position: fixed; top:58%;left: 37.4%; width: 25.3%; text-align: center;">');
+            res.write('<a class="a_danger" href="javascript:removeMsg()">Login failed... Wrong Email or Password</a>');
             res.write('</div>');
             res.end();
         });
@@ -187,11 +193,14 @@ http.createServer(function (req, res) {
                 'Content-Type': 'text/html'
             });
             res.write(data);
-            res.write('<div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-left:20px ; margin-right: 20px;">');
-            res.write('Email Already Exists');
-            res.write('<button type="button" class="close" data-dismiss="alert" aria-label="Close">');
-            res.write('<span aria-hidden="true">&times;</span>');
-            res.write('</button>');
+            // res.write('<div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-left:20px ; margin-right: 20px;">');
+            // res.write('Email Already Exists');
+            // res.write('<button type="button" class="close" data-dismiss="alert" aria-label="Close">');
+            // res.write('<span aria-hidden="true">&times;</span>');
+            // res.write('</button>');
+            // res.write('</div>');
+            res.write('<div id="message" style="position: fixed; top:58%;left: 37.4%; width: 25.3%; text-align: center;">');
+            res.write('<a class="a_danger" href="javascript:removeMsg()">Email Already Exists</a>');
             res.write('</div>');
             res.end();
         });
@@ -261,11 +270,14 @@ http.createServer(function (req, res) {
                 'Content-Type': 'text/html'
             });
             res.write(data);
-            res.write('<div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-left:20px ; margin-right: 20px;">');
-            res.write('Registered Successfully');
-            res.write('<button type="button" class="close" data-dismiss="alert" aria-label="Close">');
-            res.write('<span aria-hidden="true">&times;</span>');
-            res.write('</button>');
+            // res.write('<div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-left:20px ; margin-right: 20px;">');
+            // res.write('Registered Successfully');
+            // res.write('<button type="button" class="close" data-dismiss="alert" aria-label="Close">');
+            // res.write('<span aria-hidden="true">&times;</span>');
+            // res.write('</button>');
+            // res.write('</div>');
+            res.write('<div id="message" style="position: fixed; top:58%;left: 37.4%; width: 25.3%; text-align: center;">');
+            res.write('<a class="a_success" href="javascript:removeMsg()">Registered Successfully</a>');
             res.write('</div>');
             res.end();
         });
@@ -391,7 +403,10 @@ http.createServer(function (req, res) {
                                 res.write('<span aria-hidden="true">&times;</span>');
                                 res.write('</button>');
                                 res.write('</div>');
-                                res.write('</html>');
+                                // res.write('<div style="position: fixed; top:58%;left: 37.4%; width: 25.3%; text-align: center;color: green;">');
+                                // res.write('Logged in Successfully');
+                                // res.write('</div>');
+                                // res.write('</html>');
                                 res.end();
                                 var temp = newfilepath.split(".")
                                 temp[temp.length - 1] = "dat"
@@ -588,6 +603,9 @@ http.createServer(function (req, res) {
                                 res.write('<span aria-hidden="true">&times;</span>');
                                 res.write('</button>');
                                 res.write('</div>');
+                                // res.write('<div style="position: fixed; top:58%;left: 37.4%; width: 25.3%; text-align: center;color: green;">');
+                                // res.write('Logged in Successfully');
+                                // res.write('</div>');
                             } else if (emailPresent == "false") {
                                 res.write('<div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-left:20px ; margin-right: 20px;">');
                                 res.write('User does not exist');
@@ -595,6 +613,9 @@ http.createServer(function (req, res) {
                                 res.write('<span aria-hidden="true">&times;</span>');
                                 res.write('</button>');
                                 res.write('</div>');
+                                // res.write('<div style="position: fixed; top:58%;left: 37.4%; width: 25.3%; text-align: center;color: green;">');
+                                // res.write('Logged in Successfully');
+                                // res.write('</div>');
                             } else {
                                 res.write('<div class="alert alert-dark alert-dismissible fade show" role="alert" style="margin-left:20px ; margin-right: 20px;">');
                                 res.write('Message not updates');
@@ -602,6 +623,9 @@ http.createServer(function (req, res) {
                                 res.write('<span aria-hidden="true">&times;</span>');
                                 res.write('</button>');
                                 res.write('</div>');
+                                // res.write('<div style="position: fixed; top:58%;left: 37.4%; width: 25.3%; text-align: center;color: green;">');
+                                // res.write('Logged in Successfully');
+                                // res.write('</div>');
                             }
                             res.write('</html>');
                             res.end();

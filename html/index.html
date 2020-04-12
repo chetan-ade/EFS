@@ -2,45 +2,180 @@
 
 <head>
     <title>
-        EFS: MAIN PAGE
+        Encrypted File System
     </title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        p {
+            margin-bottom: 0px;
+            font-size: 15px;
+            color: #777;
+        }
+
+        h2 {
+            line-height: 1.66;
+            margin: 0;
+            padding: 0;
+            font-weight: 900;
+            color: #222;
+            font-family: 'Montserrat';
+            font-size: 24px;
+            text-transform: uppercase;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        body {
+            font-size: 14px;
+            line-height: 1.8;
+            color: #222;
+            font-weight: 400;
+            font-family: 'Montserrat';
+            background-image: linear-gradient(to left, #74ebd5, #9face6);
+            background-image: url("https://i.ibb.co/7ydjrrd/bg.jpg");
+            background-repeat: no-repeat;
+            background-size: cover;
+            padding: 115px 0;
+        }
+
+
+        .form-group {
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .form-input {
+            width: 100%;
+            border: 1px solid #ebebeb;
+            border-radius: 5px;
+            padding: 17px 20px;
+            box-sizing: border-box;
+            font-size: 14px;
+            font-weight: 500;
+            color: #222;
+        }
+
+        .form-submit {
+            width: 100%;
+            border-radius: 5px;
+            padding: 17px 10px;
+            box-sizing: border-box;
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+            text-transform: uppercase;
+            border: none;
+            background-image: linear-gradient(to left, #74ebd5, #9face6);
+        }
+
+        .loginhere {
+            color: #555;
+            font-weight: 500;
+            text-align: center;
+            margin-top: 91px;
+            margin-bottom: 5px;
+        }
+
+        .loginhere-link {
+            font-weight: 700;
+            color: #222;
+
+        }
+
+        .loginhere-link:hover {
+            font-weight: 700;
+            color: #222;
+        }
+
+        .a_success {
+            color: green;
+        }
+
+        .a_success:hover {
+            color: green;
+            text-decoration: none;
+        }
+
+        .a_danger {
+            color: red;
+        }
+
+        .a_danger:hover {
+            color: red;
+            text-decoration: none;
+        }
+    </style>
 </head>
 
 <body>
-    <div id="mainDiv">
-        <h1>EFS: ENCRYPTED FILE</h1>
-        <!-- <form action="./register" method="post" enctype="multipart/form-data">
-            <button type="submit" class="btn btn-primary btn-lg">Register</button>
-        </form> -->
-        <form action="./registerCheck" method="post" enctype="multipart/form-data">
-            <label for="username"><b>Username</b></label>
-            <input type="username" placeholder="Enter Username" name="username" required>
+    <div style="width: 660px; position: relative; margin: 0 auto;">
+        <div id="signup" style="background: #fff; border-radius: 10px; padding: 50px 85px;">
+            <form method="post" id="signup-form" class="signup-form" action="./registerCheck">
+                <h2 class="form-title">Create account</h2>
 
-            <label for="email"><b>Email</b></label>
-            <input type="email" placeholder="Enter Email" name="email" required>
+                <div class="form-group">
+                    <input type="username" class="form-input" name="username" id="username"
+                        placeholder="Enter Username" />
+                </div>
 
-            <label for="password"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" name="password" required>
+                <div class="form-group">
+                    <input type="email" class="form-input" name="email" id="email" placeholder="Enter Email" />
+                </div>
 
-            <input type="submit" value="Register">
-        </form>
+                <div class="form-group">
+                    <input type="password" class="form-input" name="password" id="password"
+                        placeholder="Enter Password" />
+                </div>
 
-        <!-- <form action="./login" method="post" enctype="multipart/form-data">
-            <button type="submit" class="btn btn-primary btn-lg">Login</button>
-        </form> -->
-        <form action="./loginCheck" method="post" enctype="multipart/form-data">
-            <label for="email"><b>Email Id</b></label>
-            <input type="email" placeholder="Enter Email" name="email" required>
+                <div class="form-group">
+                    <input type="submit" name="submit" id="submit" class="form-submit" value="Register" />
+                </div>
 
-            <label for="password"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" name="password" required>
+            </form>
 
-            <button type="submit">Login</button>
-        </form>
+            <p class="loginhere">
+                Have already an account ? <u><a href="javascript:showLogin()" class="loginhere-link">Login here</a></u>
+            </p>
+        </div>
+        <div id="login" style="display: none; background: #fff; border-radius: 10px; padding: 50px 85px;">
+            <form method="post" id="signup-form" class="signup-form" action="./loginCheck">
+                <h2 class="form-title">Login</h2>
+                <div class="form-group">
+                    <input type="email" class="form-input" name="email" id="email" placeholder="Enter Email" />
+                </div>
 
+                <div class="form-group">
+                    <input type="password" class="form-input" name="password" id="password"
+                        placeholder="Enter Password" />
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" name="submit" id="submit" class="form-submit" value="Login" />
+                </div>
+            </form>
+
+            <p class="loginhere">
+                Don't have an account ? <u><a href="javascript:showSignup()" class="loginhere-link">Register
+                        here</a></u>
+            </p>
+        </div>
     </div>
+    <script>
+        function showLogin() {
+            document.getElementById("signup").style.display = "none";
+            document.getElementById("login").style.display = "block";
+        }
+
+        function showSignup() {
+            document.getElementById("signup").style.display = "block";
+            document.getElementById("login").style.display = "none";
+        }
+
+        function removeMsg() {
+            document.getElementById("message").style = "display:none";
+        }
+    </script>
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
     </script>
@@ -53,3 +188,6 @@
 </body>
 
 </html>
+<!-- <div id="message" style="position: fixed; top:58%;left: 37.4%; width: 25.3%; text-align: center;">
+    <a class="a_success" href="javascript:removeMsg()">Login here</a>
+</div> -->
