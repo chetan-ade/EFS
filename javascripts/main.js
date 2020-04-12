@@ -120,8 +120,13 @@ http.createServer(function (req, res) {
                                 res.write('<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>');
                                 res.write('</body>');
                                 // res.write('<script>alert("login successfully");</script>');
-                                res.write('<div class="alert alert-success" role="alert">');
+                                // res.write('<div class="alert alert-success" role="alert">');
+                                // res.write('Logged in Successfully');
+                                res.write('<div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-left:20px ; margin-right: 20px;">');
                                 res.write('Logged in Successfully');
+                                res.write('<button type="button" class="close" data-dismiss="alert" aria-label="Close">');
+                                res.write('<span aria-hidden="true">&times;</span>');
+                                res.write('</button>');
                                 res.write('</div>');
                                 res.write('</html>');
                                 res.end();
@@ -146,9 +151,9 @@ http.createServer(function (req, res) {
                 'Content-Type': 'text/html'
             });
             res.write(data);
-            // res.write('<script>alert("login failed...Wrong email or password.");</script>');
-            res.write('<div class="alert alert-danger" role="alert">');
-            res.write('Logged failed... Wrong email or password');
+
+            res.write('<div class="alert alert-danger" role="alert" style="margin-left:20px ; margin-right: 20px;">');
+            res.write('Login failed... Wrong email or password');
             res.write('</div>');
             res.end();
         });
@@ -170,8 +175,8 @@ http.createServer(function (req, res) {
                 'Content-Type': 'text/html'
             });
             res.write(data);
-            // res.write('<script>alert("email already exists");</script>');
-            res.write('<div class="alert alert-danger" role="alert">');
+            res.write('<script>alert("email already exists");</script>');
+            res.write('<div class="alert alert-danger" role="alert"  style="margin-left:20px ; margin-right: 20px;">');
             res.write('Email Already Exists');
             res.write('</div>');
             res.end();
@@ -235,8 +240,13 @@ http.createServer(function (req, res) {
             });
             res.write(data);
             // res.write('<script>alert("registered successfully");</script>');
-            res.write('<div class="alert alert-success" role="alert">');
+            // res.write('<div class="alert alert-success" role="alert">');
+            // res.write('Registered Successfully');
+            res.write('<div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-left:20px ; margin-right: 20px;">');
             res.write('Registered Successfully');
+            res.write('<button type="button" class="close" data-dismiss="alert" aria-label="Close">');
+            res.write('<span aria-hidden="true">&times;</span>');
+            res.write('</button>');
             res.write('</div>');
             res.end();
         });
@@ -353,8 +363,13 @@ http.createServer(function (req, res) {
                                 res.write('</body>');
                                 console.log('file uploaded successfully');
                                 // res.write('<script>alert("file uploaded successfully");</script>');
-                                res.write('<div class="alert alert-success" role="alert">');
+                                // res.write('<div class="alert alert-success" role="alert">');
+                                // res.write('File Uploaded Successfully');
+                                res.write('<div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-left:20px ; margin-right: 20px;">');
                                 res.write('File Uploaded Successfully');
+                                res.write('<button type="button" class="close" data-dismiss="alert" aria-label="Close">');
+                                res.write('<span aria-hidden="true">&times;</span>');
+                                res.write('</button>');
                                 res.write('</div>');
                                 res.write('</html>');
                                 res.end();
@@ -448,8 +463,13 @@ http.createServer(function (req, res) {
         });
 
         // res.write('<script>alert("shared successfully");</script>');
-        res.write('<div class="alert alert-success" role="alert">');
+        // res.write('<div class="alert alert-success" role="alert">');
+        // res.write('File Shared Successfully');
+        res.write('<div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-left:20px ; margin-right: 20px;">');
         res.write('File Shared Successfully');
+        res.write('<button type="button" class="close" data-dismiss="alert" aria-label="Close">');
+        res.write('<span aria-hidden="true">&times;</span>');
+        res.write('</button>');
         res.write('</div>');
         res.end();
 
