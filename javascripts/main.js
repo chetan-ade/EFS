@@ -99,15 +99,14 @@ http.createServer(function (req, res) {
                                         res.write('<input type="submit" name="filename" value="' + filename + '"/>');
                                         res.write('<br><br>');
                                     }
-                                    res.write('</form>');
                                 } else {
                                     res.write('<h4>No files uploaded...</h1>');
                                 }
-
+                                res.write('</form>');
                                 res.write('<h3>Files Sharing</h3>');
                                 res.write('<br>');
+                                res.write('<form action="./shareFile" method="post" enctype="multipart/form-data">');
                                 if (result.filesOwned != undefined) {
-                                    res.write('<form action="./shareFile" method="post" enctype="multipart/form-data">');
                                     res.write('<input type="hidden" name="email" value="' + emailInput + '">');
                                     res.write('<input type="hidden" name="username" value="' + result.username + '">');
                                     res.write('<h4>Enter File to Share</h4>');
@@ -122,25 +121,23 @@ http.createServer(function (req, res) {
                                     res.write('<br>');
                                     res.write('<br>');
                                     res.write('<input type="submit" >');
-                                    res.write('</form>');
+
                                 } else {
                                     res.write('<h4>No files available to share<h5>');
                                 }
-
+                                res.write('</form>');
                                 res.write('<h3>Files Shared With Me</h3>');
                                 res.write('<form action="./downloadSharedFile" method="post" enctype="multipart/form-data">');
                                 if (result.filesSharedWithMe != undefined) {
                                     for (var i = 0; i < result.filesSharedWithMe.length; i++) {
                                         filename = result.filesSharedWithMe[i].filename;
-                                        //change below line
                                         res.write('<input type="submit" name="filename" value="' + filename + ' : ' + result.filesSharedWithMe[i].username + '"/>');
                                         res.write('<br><br>');
                                     }
-                                    res.write('</form>');
                                 } else {
                                     res.write('<h4>No files shared with me...</h1>');
                                 }
-
+                                res.write('</form>');
                                 res.write('<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>');
                                 res.write('<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>');
                                 res.write('<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>');
@@ -341,7 +338,7 @@ http.createServer(function (req, res) {
                                 res.write('<form action="./downloadFile" method="post" enctype="multipart/form-data">');
                                 res.write('<input type="hidden" name="email" value="' + email + '">');
                                 res.write('<input type="hidden" name="username" value="' + username + '">');
-                                console.log(result);
+                                // console.log(result);
                                 for (var i = 0; i < result.filesOwned.length; i++) {
                                     filename = result.filesOwned[i];
                                     res.write('<input type="submit" name="filename" value="' + filename + '"/>');
@@ -350,8 +347,8 @@ http.createServer(function (req, res) {
                                 res.write('</form>');
                                 res.write('<h3>Files Sharing</h3>');
                                 res.write('<br>');
+                                res.write('<form action="./shareFile" method="post" enctype="multipart/form-data">');
                                 if (result.filesOwned != undefined) {
-                                    res.write('<form action="./shareFile" method="post" enctype="multipart/form-data">');
                                     res.write('<input type="hidden" name="email" value="' + email + '">');
                                     res.write('<input type="hidden" name="username" value="' + username + '">');
                                     res.write('<h4>Enter File to Share</h4>');
@@ -366,10 +363,10 @@ http.createServer(function (req, res) {
                                     res.write('<br>');
                                     res.write('<br>');
                                     res.write('<input type="submit" >');
-                                    res.write('</form>');
                                 } else {
                                     res.write('<h4>No files available to share<h5>');
                                 }
+                                res.write('</form>');
                                 res.write('<h3>Files Shared With Me</h3>');
                                 res.write('<form action="./downloadSharedFile" method="post" enctype="multipart/form-data">');
                                 if (result.filesSharedWithMe != undefined) {
@@ -378,10 +375,11 @@ http.createServer(function (req, res) {
                                         res.write('<input type="submit" name="filename" value="' + filename + ' : ' + result.filesSharedWithMe[i].username + '"/>');
                                         res.write('<br><br>');
                                     }
-                                    res.write('</form>');
+
                                 } else {
                                     res.write('<h4>No files shared with me...</h1>');
                                 }
+                                res.write('</form>');
                                 res.write('<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>');
                                 res.write('<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>');
                                 res.write('<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>');
@@ -537,15 +535,15 @@ http.createServer(function (req, res) {
                                     res.write('<input type="submit" name="filename" value="' + filename + '"/>');
                                     res.write('<br><br>');
                                 }
-                                res.write('</form>');
                             } else {
                                 res.write('<h4>No files uploaded...</h1>');
                             }
+                            res.write('</form>');
 
                             res.write('<h3>Files Sharing</h3>');
                             res.write('<br>');
+                            res.write('<form action="./shareFile" method="post" enctype="multipart/form-data">');
                             if (result.filesOwned != undefined) {
-                                res.write('<form action="./shareFile" method="post" enctype="multipart/form-data">');
                                 res.write('<input type="hidden" name="email" value="' + owner + '">');
                                 res.write('<input type="hidden" name="username" value="' + username + '">');
                                 res.write('<h4>Enter File to Share</h4>');
@@ -560,10 +558,10 @@ http.createServer(function (req, res) {
                                 res.write('<br>');
                                 res.write('<br>');
                                 res.write('<input type="submit" >');
-                                res.write('</form>');
                             } else {
                                 res.write('<h4>No files available to share<h5>');
                             }
+                            res.write('</form>');
 
                             res.write('<h3>Files Shared With Me</h3>');
                             res.write('<form action="./downloadSharedFile" method="post" enctype="multipart/form-data">');
@@ -573,10 +571,11 @@ http.createServer(function (req, res) {
                                     res.write('<input type="submit" name="filename" value="' + filename + ' : ' + result.filesSharedWithMe[i].username + '"/>');
                                     res.write('<br><br>');
                                 }
-                                res.write('</form>');
+
                             } else {
                                 res.write('<h4>No files shared with me...</h1>');
                             }
+                            res.write('</form>');
 
                             res.write('<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>');
                             res.write('<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>');
