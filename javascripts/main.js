@@ -3,9 +3,27 @@ var formidable = require('formidable');
 var fs = require('fs');
 var mkdirp = require('mkdirp');
 var MongoClient = require('mongodb').MongoClient;
-const url = "mongodb+srv://chetanade:improve619619@efs-zym9f.azure.mongodb.net/test?retryWrites=true";
 var encryptor = require('file-encryptor');
+const Cryptr = require('cryptr');
+const cryptr = new Cryptr('myTotalySecretKey');
 var key = 'My Super Secret Key';
+const url = "mongodb+srv://chetanade:improve619619@efs-zym9f.azure.mongodb.net/test?retryWrites=true";
+var crypto = require('crypto');
+var cypherKey = "mySecretKey";
+
+function encryptFunc(text) {
+    var cipher = crypto.createCipher('aes-256-cbc', cypherKey)
+    var crypted = cipher.update(text, 'utf8', 'hex')
+    crypted += cipher.final('hex');
+    return crypted; //94grt976c099df25794bf9ccb85bea72
+}
+
+function decryptFunc(text) {
+    var decipher = crypto.createDecipher('aes-256-cbc', cypherKey)
+    var dec = decipher.update(text, 'hex', 'utf8')
+    dec += decipher.final('utf8');
+    return dec; //myPlainText
+}
 
 console.log("Go to http://localhost:8080/")
 encryptEverything = false
@@ -33,7 +51,10 @@ http.createServer(function (req, res) {
         form.parse(req, function (err, fields, files) {
             emailInput = fields.email;
             passwordInput = fields.password;
-
+            if (encryptEverything) {
+                emailInput = encryptFunc(emailInput);
+                passwordInput = encryptFunc(passwordInput);
+            }
             MongoClient.connect(url, {
                 useNewUrlParser: true
             }, function (err, db) {
@@ -183,6 +204,10 @@ http.createServer(function (req, res) {
         form.parse(req, function (err, fields, files) {
             emailInput = fields.email;
             passwordInput = fields.password;
+            if (encryptEverything) {
+                emailInput = encryptFunc(emailInput);
+                passwordInput = encryptFunc(passwordInput);
+            }
             MongoClient.connect(url, {
                 useNewUrlParser: true
             }, function (err, db) {
