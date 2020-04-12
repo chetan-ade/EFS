@@ -152,8 +152,14 @@ http.createServer(function (req, res) {
             });
             res.write(data);
 
-            res.write('<div class="alert alert-danger" role="alert" style="margin-left:20px ; margin-right: 20px;">');
+            // res.write('<div class="alert alert-danger" role="alert" style="margin-left:20px ; margin-right: 20px;">');
+            // res.write('Login failed... Wrong email or password');
+            // res.write('</div>');
+            res.write('<div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-left:20px ; margin-right: 20px;">');
             res.write('Login failed... Wrong email or password');
+            res.write('<button type="button" class="close" data-dismiss="alert" aria-label="Close">');
+            res.write('<span aria-hidden="true">&times;</span>');
+            res.write('</button>');
             res.write('</div>');
             res.end();
         });
@@ -175,8 +181,14 @@ http.createServer(function (req, res) {
                 'Content-Type': 'text/html'
             });
             res.write(data);
-            res.write('<div class="alert alert-danger" role="alert"  style="margin-left:20px ; margin-right: 20px;">');
+            // res.write('<div class="alert alert-danger" role="alert"  style="margin-left:20px ; margin-right: 20px;">');
+            // res.write('Email Already Exists');
+            // res.write('</div>');
+            res.write('<div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-left:20px ; margin-right: 20px;">');
             res.write('Email Already Exists');
+            res.write('<button type="button" class="close" data-dismiss="alert" aria-label="Close">');
+            res.write('<span aria-hidden="true">&times;</span>');
+            res.write('</button>');
             res.write('</div>');
             res.end();
         });
