@@ -23,7 +23,7 @@ http.createServer(function (req, res) {
 
     } else if (req.url == '/login') {
         //when login button on main page is clicked
-        fs.readFile('./html/login.html', function (err, data) {
+        fs.readFile('./html/main.html', function (err, data) {
             res.writeHead(200, {
                 'Content-Type': 'text/html'
             });
@@ -146,7 +146,7 @@ http.createServer(function (req, res) {
 
     } else if (req.url == '/loginFailed') {
         //login failed... email/password already exists
-        fs.readFile('./html/login.html', function (err, data) {
+        fs.readFile('./html/main.html', function (err, data) {
             res.writeHead(200, {
                 'Content-Type': 'text/html'
             });
@@ -160,7 +160,7 @@ http.createServer(function (req, res) {
 
     } else if (req.url == '/register') {
         //when register button on main page is clicked
-        fs.readFile('./html/register.html', function (err, data) {
+        fs.readFile('./html/main.html', function (err, data) {
             res.writeHead(200, {
                 'Content-Type': 'text/html'
             });
@@ -170,7 +170,7 @@ http.createServer(function (req, res) {
 
     } else if (req.url == '/registerAgain') {
         //when register button on main page is clicked
-        fs.readFile('./html/register.html', function (err, data) {
+        fs.readFile('./html/main.html', function (err, data) {
             res.writeHead(200, {
                 'Content-Type': 'text/html'
             });
