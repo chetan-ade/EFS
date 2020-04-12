@@ -382,7 +382,9 @@ http.createServer(function (req, res) {
                                 res.write('</div>');
                                 res.write('</html>');
                                 res.end();
-                                var newfilepathDAT = '.' + newfilepath.split(".")[1] + '.' + newfilepath.split(".")[2] + '.dat';
+                                var temp = newfilepath.split(".")
+                                temp[temp.length - 1] = "dat"
+                                var newfilepathDAT = temp.join(".");
                                 encryptor.encryptFile(newfilepath, newfilepathDAT, key, function (err) {
                                     console.log('file encrypted');
                                     console.log('source: ', newfilepath);
@@ -444,6 +446,27 @@ http.createServer(function (req, res) {
             console.log("Owner:", owner);
             console.log("Filename:", filename);
             console.log("PersonToShareWith:", persontoshare);
+            var emailPresent = false
+
+            MongoClient.connect(url, {
+                useNewUrlParser: true
+            }, function (err, db) {
+                if (err) throw err;
+
+                var dbo = db.db("EFSDB");
+                dbo.collection("users").findOne({
+                    _id: persontoshare
+                }, function (err, result) {
+                    if (err) throw err;
+                    if (result === null) {
+                        emailPresent = false
+                    } else {
+                        emailPresent = true
+                    }
+                    db.close();
+                });
+            });
+
             MongoClient.connect(url, {
                 useNewUrlParser: true
             }, function (err, db) {
@@ -462,7 +485,11 @@ http.createServer(function (req, res) {
                 };
                 dbo.collection("users").updateOne(myquery, newvalues, function (err, res) {
                     if (err) throw err;
-                    console.log('1 file added to filesSharedDB');
+                    if (emailPresent) {
+                        console.log('1 file added to filesSharedDB');
+                    } else {
+                        console.log(persontoshare, "is not present in database.")
+                    }
                     db.close();
                 });
             });
@@ -543,12 +570,21 @@ http.createServer(function (req, res) {
                             res.write('<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>');
                             res.write('<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>');
                             res.write('</body>');
-                            res.write('<div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-left:20px ; margin-right: 20px;">');
-                            res.write('File Shared Successfully');
-                            res.write('<button type="button" class="close" data-dismiss="alert" aria-label="Close">');
-                            res.write('<span aria-hidden="true">&times;</span>');
-                            res.write('</button>');
-                            res.write('</div>');
+                            if (emailPresent) {
+                                res.write('<div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-left:20px ; margin-right: 20px;">');
+                                res.write('File Shared Successfully');
+                                res.write('<button type="button" class="close" data-dismiss="alert" aria-label="Close">');
+                                res.write('<span aria-hidden="true">&times;</span>');
+                                res.write('</button>');
+                                res.write('</div>');
+                            } else {
+                                res.write('<div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-left:20px ; margin-right: 20px;">');
+                                res.write('Email does not exist');
+                                res.write('<button type="button" class="close" data-dismiss="alert" aria-label="Close">');
+                                res.write('<span aria-hidden="true">&times;</span>');
+                                res.write('</button>');
+                                res.write('</div>');
+                            }
                             res.write('</html>');
                             res.end();
                         });
