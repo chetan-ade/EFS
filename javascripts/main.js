@@ -13,7 +13,7 @@ http.createServer(function (req, res) {
 
     if (req.url == '/') {
         //Home Page
-        fs.readFile('./html/main.html', function (err, data) {
+        fs.readFile('./html/index.html', function (err, data) {
             res.writeHead(200, {
                 'Content-Type': 'text/html'
             });
@@ -21,17 +21,8 @@ http.createServer(function (req, res) {
             res.end();
         });
 
-    } else if (req.url == '/login') {
-        //when login button on main page is clicked
-        fs.readFile('./html/main.html', function (err, data) {
-            res.writeHead(200, {
-                'Content-Type': 'text/html'
-            });
-            res.write(data);
-            res.end();
-        });
     } else if (req.url == '/loginCheck') {
-        //successfull login
+        // Checking Login
         console.log('\nChecking login...');
         var form = new formidable.IncomingForm();
         var emailInput;
@@ -41,33 +32,40 @@ http.createServer(function (req, res) {
         form.parse(req, function (err, fields, files) {
             emailInput = fields.email;
             passwordInput = fields.password;
+
             MongoClient.connect(url, {
                 useNewUrlParser: true
             }, function (err, db) {
                 if (err) throw err;
+
                 var dbo = db.db("EFSDB");
                 dbo.collection("users").findOne({
                     _id: emailInput
                 }, function (err, result) {
                     if (err) throw err;
+
+                    // Email Does not exists
                     if (result === null) {
                         console.log('user email does not exists.');
                         res.writeHead(301, {
                             Location: './loginFailed'
                         });
                         res.end();
+
                     } else {
                         if ((result._id == emailInput) && (result.password == passwordInput)) {
-                            fs.readFile('./html/uploadFile.html', function (err, data) {
+
+                            fs.readFile('./html/home.html', function (err, data) {
                                 console.log('logged in successfully');
                                 res.writeHead(200, {
                                     'Content-Type': 'text/html'
                                 });
                                 res.write(data);
+
+                                // Adding contents to UserPage from database
                                 res.write('<input type="hidden" name="email" value="' + emailInput + '">');
                                 res.write('</form>');
                                 res.write('<h3>Files Owned</h3>');
-                                // res.write(""+result.filesOwned);
                                 res.write('<form action="./downloadFile" method="post" enctype="multipart/form-data">');
                                 res.write('<input type="hidden" name="email" value="' + emailInput + '">');
                                 if (result.filesOwned != undefined) {
@@ -85,7 +83,6 @@ http.createServer(function (req, res) {
                                 if (result.filesOwned != undefined) {
                                     res.write('<form action="./shareFile" method="post" enctype="multipart/form-data">');
                                     res.write('<input type="hidden" name="email" value="' + emailInput + '">');
-                                    // res.write('<input type="text" name="filetoshare" placeholder="Enter file name to share">');
                                     res.write('<h4>Enter File to Share</h4>');
                                     res.write('<select name="filetoshare">');
                                     for (var i = 0; i < result.filesOwned.length; i++) {
@@ -104,7 +101,6 @@ http.createServer(function (req, res) {
                                 }
                                 res.write('<h3>Files Shared With Me</h3>');
                                 res.write('<form action="./downloadSharedFile" method="post" enctype="multipart/form-data">');
-                                // res.write('<input type="hidden" name="email" value="' + emailInput + '">');
                                 if (result.filesSharedWithMe != undefined) {
                                     for (var i = 0; i < result.filesSharedWithMe.length; i++) {
                                         filename = result.filesSharedWithMe[i].filename;
@@ -119,9 +115,6 @@ http.createServer(function (req, res) {
                                 res.write('<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>');
                                 res.write('<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>');
                                 res.write('</body>');
-                                // res.write('<script>alert("login successfully");</script>');
-                                // res.write('<div class="alert alert-success" role="alert">');
-                                // res.write('Logged in Successfully');
                                 res.write('<div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-left:20px ; margin-right: 20px;">');
                                 res.write('Logged in Successfully');
                                 res.write('<button type="button" class="close" data-dismiss="alert" aria-label="Close">');
@@ -146,15 +139,11 @@ http.createServer(function (req, res) {
 
     } else if (req.url == '/loginFailed') {
         //login failed... email/password already exists
-        fs.readFile('./html/main.html', function (err, data) {
+        fs.readFile('./html/index.html', function (err, data) {
             res.writeHead(200, {
                 'Content-Type': 'text/html'
             });
             res.write(data);
-
-            // res.write('<div class="alert alert-danger" role="alert" style="margin-left:20px ; margin-right: 20px;">');
-            // res.write('Login failed... Wrong email or password');
-            // res.write('</div>');
             res.write('<div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-left:20px ; margin-right: 20px;">');
             res.write('Login failed... Wrong email or password');
             res.write('<button type="button" class="close" data-dismiss="alert" aria-label="Close">');
@@ -164,26 +153,14 @@ http.createServer(function (req, res) {
             res.end();
         });
 
-    } else if (req.url == '/register') {
-        //when register button on main page is clicked
-        fs.readFile('./html/main.html', function (err, data) {
-            res.writeHead(200, {
-                'Content-Type': 'text/html'
-            });
-            res.write(data);
-            res.end();
-        });
 
     } else if (req.url == '/registerAgain') {
         //when register button on main page is clicked
-        fs.readFile('./html/main.html', function (err, data) {
+        fs.readFile('./html/index.html', function (err, data) {
             res.writeHead(200, {
                 'Content-Type': 'text/html'
             });
             res.write(data);
-            // res.write('<div class="alert alert-danger" role="alert"  style="margin-left:20px ; margin-right: 20px;">');
-            // res.write('Email Already Exists');
-            // res.write('</div>');
             res.write('<div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-left:20px ; margin-right: 20px;">');
             res.write('Email Already Exists');
             res.write('<button type="button" class="close" data-dismiss="alert" aria-label="Close">');
@@ -245,14 +222,11 @@ http.createServer(function (req, res) {
 
     } else if (req.url == '/registerSuccess') {
         //successful registeration
-        fs.readFile('./html/main.html', function (err, data) {
+        fs.readFile('./html/index.html', function (err, data) {
             res.writeHead(200, {
                 'Content-Type': 'text/html'
             });
             res.write(data);
-            // res.write('<script>alert("registered successfully");</script>');
-            // res.write('<div class="alert alert-success" role="alert">');
-            // res.write('Registered Successfully');
             res.write('<div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-left:20px ; margin-right: 20px;">');
             res.write('Registered Successfully');
             res.write('<button type="button" class="close" data-dismiss="alert" aria-label="Close">');
@@ -264,7 +238,7 @@ http.createServer(function (req, res) {
 
     } else if (req.url == '/uploadFile') {
         //File upload form
-        fs.readFile('./html/uploadFile.html', function (err, data) {
+        fs.readFile('./html/home.html', function (err, data) {
             res.writeHead(200, {
                 'Content-Type': 'text/html'
             });
@@ -315,7 +289,7 @@ http.createServer(function (req, res) {
                             _id: email
                         }, function (err, result) {
                             if (err) throw err;
-                            fs.readFile('./html/uploadFile.html', function (err, data) {
+                            fs.readFile('./html/home.html', function (err, data) {
                                 res.writeHead(200, {
                                     'Content-Type': 'text/html'
                                 });
@@ -323,7 +297,6 @@ http.createServer(function (req, res) {
                                 res.write('<input type="hidden" name="email" value="' + email + '">');
                                 res.write('</form>');
                                 res.write('<h3>Files Owned</h3>');
-                                // res.write(""+result.filesOwned);
                                 res.write('<form action="./downloadFile" method="post" enctype="multipart/form-data">');
                                 res.write('<input type="hidden" name="email" value="' + email + '">');
                                 console.log(result);
@@ -338,7 +311,6 @@ http.createServer(function (req, res) {
                                 if (result.filesOwned != undefined) {
                                     res.write('<form action="./shareFile" method="post" enctype="multipart/form-data">');
                                     res.write('<input type="hidden" name="email" value="' + email + '">');
-                                    // res.write('<input type="text" name="filetoshare" placeholder="Enter file name to share">');
                                     res.write('<h4>Enter File to Share</h4>');
                                     res.write('<select name="filetoshare">');
                                     for (var i = 0; i < result.filesOwned.length; i++) {
@@ -357,7 +329,6 @@ http.createServer(function (req, res) {
                                 }
                                 res.write('<h3>Files Shared With Me</h3>');
                                 res.write('<form action="./downloadSharedFile" method="post" enctype="multipart/form-data">');
-                                // res.write('<input type="hidden" name="email" value="' + emailInput + '">');
                                 if (result.filesSharedWithMe != undefined) {
                                     for (var i = 0; i < result.filesSharedWithMe.length; i++) {
                                         filename = result.filesSharedWithMe[i].filename;
@@ -373,9 +344,6 @@ http.createServer(function (req, res) {
                                 res.write('<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>');
                                 res.write('</body>');
                                 console.log('file uploaded successfully');
-                                // res.write('<script>alert("file uploaded successfully");</script>');
-                                // res.write('<div class="alert alert-success" role="alert">');
-                                // res.write('File Uploaded Successfully');
                                 res.write('<div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-left:20px ; margin-right: 20px;">');
                                 res.write('File Uploaded Successfully');
                                 res.write('<button type="button" class="close" data-dismiss="alert" aria-label="Close">');
@@ -384,9 +352,6 @@ http.createServer(function (req, res) {
                                 res.write('</div>');
                                 res.write('</html>');
                                 res.end();
-                                // Encrypt file.
-                                // console.log("NEWFILEPATH:", newfilepath)
-                                // console.log(newfilepath.split("."))
                                 var newfilepathDAT = '.' + newfilepath.split(".")[1] + '.' + newfilepath.split(".")[2] + '.dat';
                                 encryptor.encryptFile(newfilepath, newfilepathDAT, key, function (err) {
                                     console.log('file encrypted');
@@ -473,9 +438,6 @@ http.createServer(function (req, res) {
             });
         });
 
-        // res.write('<script>alert("shared successfully");</script>');
-        // res.write('<div class="alert alert-success" role="alert">');
-        // res.write('File Shared Successfully');
         res.write('<div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-left:20px ; margin-right: 20px;">');
         res.write('File Shared Successfully');
         res.write('<button type="button" class="close" data-dismiss="alert" aria-label="Close">');
