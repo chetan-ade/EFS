@@ -175,7 +175,6 @@ http.createServer(function (req, res) {
                 'Content-Type': 'text/html'
             });
             res.write(data);
-            res.write('<script>alert("email already exists");</script>');
             res.write('<div class="alert alert-danger" role="alert"  style="margin-left:20px ; margin-right: 20px;">');
             res.write('Email Already Exists');
             res.write('</div>');
