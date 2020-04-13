@@ -1,3 +1,4 @@
+const cool = require('cool-ascii-faces')
 var http = require('http');
 var formidable = require('formidable');
 var fs = require('fs');
@@ -27,7 +28,7 @@ function decryptFunc(text) {
 }
 
 
-console.log("Go to http://localhost:8080/")
+console.log("Go to http://localhost:5000/")
 encryptEverything = false
 http.createServer(function (req, res) {
     // fs.readFile('./html/index.html', function (err, data) {
@@ -751,4 +752,4 @@ http.createServer(function (req, res) {
 
         });
     }
-}).listen(8080);
+}).listen(5000);
