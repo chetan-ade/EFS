@@ -28,7 +28,7 @@ function decryptFunc(text) {
 }
 
 
-console.log("Go to http://localhost:5000/")
+console.log("Go to http://localhost:8080/")
 encryptEverything = false
 http.createServer(function (req, res) {
     // fs.readFile('./html/index.html', function (err, data) {
@@ -752,4 +752,4 @@ http.createServer(function (req, res) {
 
         });
     }
-}).listen(5000);
+}).listen(8080);
