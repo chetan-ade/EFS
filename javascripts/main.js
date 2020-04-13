@@ -29,9 +29,14 @@ function decryptFunc(text) {
 
 console.log("Go to http://localhost:8080/")
 encryptEverything = false
-
 http.createServer(function (req, res) {
-
+    fs.readFile('./html/index.html', function (err, data) {
+        res.writeHead(200, {
+            'Content-Type': 'text/html'
+        });
+        res.write(data);
+        res.end();
+    });
     if (req.url == '/') {
         //Home Page
         fs.readFile('./html/index.html', function (err, data) {
