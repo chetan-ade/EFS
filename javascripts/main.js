@@ -42,6 +42,19 @@ http.createServer(function (req, res) {
             res.end();
         });
 
+    } else if (req.url == '/login') {
+        //Home Page
+        fs.readFile('./html/index.html', function (err, data) {
+            res.writeHead(200, {
+                'Content-Type': 'text/html'
+            });
+            res.write(data);
+            res.write('<script>');
+            res.write('showLogin()');
+            res.write('</script>');
+            res.end();
+        });
+
     } else if (req.url == '/loginCheck') {
         // Checking Login
         console.log('\nChecking login...');
@@ -84,49 +97,59 @@ http.createServer(function (req, res) {
                                     'Content-Type': 'text/html'
                                 });
                                 res.write(data);
-
+                                //
+                                //
+                                //
+                                //
+                                //
                                 // Adding contents to Homepage from MongoDB database 1 - On log in
                                 res.write('<input type="hidden" name="email" value="' + emailInput + '">');
                                 res.write('<input type="hidden" name="username" value="' + result.username + '">');
                                 res.write('</form>');
+                                res.write('<div style="height: 20px;"></div>');
                                 res.write('<h3>Files Owned</h3>');
+                                res.write('<hr>');
                                 res.write('<form action="./downloadFile" method="post" enctype="multipart/form-data">');
                                 res.write('<input type="hidden" name="email" value="' + emailInput + '">');
                                 res.write('<input type="hidden" name="username" value="' + result.username + '">');
                                 if (result.filesOwned != undefined) {
                                     for (var i = 0; i < result.filesOwned.length; i++) {
                                         filename = result.filesOwned[i];
-                                        res.write('<input type="submit" name="filename" value="' + filename + '"/>');
-                                        res.write('<br><br>');
+                                        res.write('<input type="submit" name="filename" style="margin-right: 20px;" value="' + filename + '"/>');
                                     }
                                 } else {
-                                    res.write('<h4>No files uploaded...</h1>');
+                                    res.write('<h6>No files uploaded...</h6>');
                                 }
                                 res.write('</form>');
+                                res.write('<div style="height: 20px;"></div>');
                                 res.write('<h3>Files Sharing</h3>');
-                                res.write('<br>');
+                                res.write('<hr>');
                                 res.write('<form action="./shareFile" method="post" enctype="multipart/form-data">');
                                 if (result.filesOwned != undefined) {
                                     res.write('<input type="hidden" name="email" value="' + emailInput + '">');
                                     res.write('<input type="hidden" name="username" value="' + result.username + '">');
-                                    res.write('<h4>Enter File to Share</h4>');
-                                    res.write('<select name="filetoshare">');
+                                    res.write('<div style="display: inline-block; margin-top: -20px;">');
+                                    res.write('<h6 style="display: inline-block;">Select File</h6>');
+                                    res.write('<pre style="display: inline-block;">  </pre>');
+                                    res.write('<select name="filetoshare"> style="display: inline-block;"');
                                     for (var i = 0; i < result.filesOwned.length; i++) {
                                         res.write('<option value="' + result.filesOwned[i] + '">' + result.filesOwned[i] + '</option>');
                                     }
                                     res.write('</select>');
-                                    res.write('<br>');
-                                    res.write('<br>');
-                                    res.write('<input type="text" name="persontoshare" placeholder="Enter username">');
-                                    res.write('<br>');
-                                    res.write('<br>');
+                                    res.write('</div>');
+                                    res.write('<div style="height: 10px;"></div>');
+                                    res.write('<div style="display: inline-block;">');
+                                    res.write('<h6 style="display: inline-block;padding-right: 11px;">Share with </h6>');
+                                    res.write('<input style="display: inline-block;margin-right: 5px;" type="text" name="persontoshare" placeholder="Enter username">');
+                                    res.write('</div>');
                                     res.write('<input type="submit" >');
-
+                                    res.write('<div style="height: 20px;"></div>');
                                 } else {
-                                    res.write('<h4>No files available to share<h5>');
+                                    res.write('<h6>No files available to share<h6>');
                                 }
                                 res.write('</form>');
-                                res.write('<h3>Files Shared With Me</h3>');
+                                res.write('<h3>Files Shared</h3>');
+                                res.write('<hr>');
                                 res.write('<form action="./downloadSharedFile" method="post" enctype="multipart/form-data">');
                                 if (result.filesSharedWithMe != undefined) {
                                     for (var i = 0; i < result.filesSharedWithMe.length; i++) {
@@ -135,24 +158,25 @@ http.createServer(function (req, res) {
                                         res.write('<br><br>');
                                     }
                                 } else {
-                                    res.write('<h4>No files shared with me...</h1>');
+                                    res.write('<h6>No files shared with me...</h6>');
                                 }
                                 res.write('</form>');
                                 res.write('<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>');
                                 res.write('<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>');
                                 res.write('<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>');
                                 res.write('</body>');
-                                res.write('<div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-left:20px ; margin-right: 20px;">');
+                                res.write('<div class="alert alert-success alert-dismissible fade show" role="alert">');
                                 res.write('Logged in Successfully');
                                 res.write('<button type="button" class="close" data-dismiss="alert" aria-label="Close">');
                                 res.write('<span aria-hidden="true">&times;</span>');
                                 res.write('</button>');
                                 res.write('</div>');
-                                // res.write('<div style="position: fixed; top:58%;left: 37.4%; width: 25.3%; text-align: center;color: green;">');
-                                // res.write('Logged in Successfully');
-                                // res.write('</div>');
-                                // res.write('</html>');
                                 res.end();
+                                //
+                                //
+                                //
+                                //
+                                //
                             });
                         } else {
                             console.log('wrong password');
@@ -174,13 +198,10 @@ http.createServer(function (req, res) {
                 'Content-Type': 'text/html'
             });
             res.write(data);
-            // res.write('<div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-left:20px ; margin-right: 20px;">');
-            // res.write('Login failed... Wrong email or password');
-            // res.write('<button type="button" class="close" data-dismiss="alert" aria-label="Close">');
-            // res.write('<span aria-hidden="true">&times;</span>');
-            // res.write('</button>');
-            // res.write('</div>');
-            res.write('<div id="message" style="position: fixed; top:58%;left: 37.4%; width: 25.3%; text-align: center;">');
+            res.write('<script>');
+            res.write('showLogin()');
+            res.write('</script>');
+            res.write('<div id="message" style="position: fixed; top:50%;left: 37.4%; width: 25.3%; text-align: center;">');
             res.write('<a class="a_danger" href="javascript:removeMsg()">Login failed... Wrong Email or Password</a>');
             res.write('</div>');
             res.end();
@@ -193,12 +214,6 @@ http.createServer(function (req, res) {
                 'Content-Type': 'text/html'
             });
             res.write(data);
-            // res.write('<div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-left:20px ; margin-right: 20px;">');
-            // res.write('Email Already Exists');
-            // res.write('<button type="button" class="close" data-dismiss="alert" aria-label="Close">');
-            // res.write('<span aria-hidden="true">&times;</span>');
-            // res.write('</button>');
-            // res.write('</div>');
             res.write('<div id="message" style="position: fixed; top:58%;left: 37.4%; width: 25.3%; text-align: center;">');
             res.write('<a class="a_danger" href="javascript:removeMsg()">Email Already Exists</a>');
             res.write('</div>');
@@ -270,12 +285,6 @@ http.createServer(function (req, res) {
                 'Content-Type': 'text/html'
             });
             res.write(data);
-            // res.write('<div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-left:20px ; margin-right: 20px;">');
-            // res.write('Registered Successfully');
-            // res.write('<button type="button" class="close" data-dismiss="alert" aria-label="Close">');
-            // res.write('<span aria-hidden="true">&times;</span>');
-            // res.write('</button>');
-            // res.write('</div>');
             res.write('<div id="message" style="position: fixed; top:58%;left: 37.4%; width: 25.3%; text-align: center;">');
             res.write('<a class="a_success" href="javascript:removeMsg()">Registered Successfully</a>');
             res.write('</div>');
@@ -321,7 +330,6 @@ http.createServer(function (req, res) {
                     console.log('1 file added to filesOwnedDB');
                     db.close();
                 });
-
                 var oldpath = files.filetoupload.path;
                 newfilepath = './storage/' + username + '/' + files.filetoupload.name;
                 console.log('oldpath: ', oldpath);
@@ -342,44 +350,59 @@ http.createServer(function (req, res) {
                                     'Content-Type': 'text/html'
                                 });
                                 res.write(data);
+                                //
+                                //
+                                //
+                                //
+                                //
                                 // Adding contents to Homepage from MongoDB database 2 - on file upload
                                 res.write('<input type="hidden" name="email" value="' + email + '">');
                                 res.write('<input type="hidden" name="username" value="' + username + '">');
                                 res.write('</form>');
+                                res.write('<div style="height: 20px;"></div>');
                                 res.write('<h3>Files Owned</h3>');
+                                res.write('<hr>');
                                 res.write('<form action="./downloadFile" method="post" enctype="multipart/form-data">');
                                 res.write('<input type="hidden" name="email" value="' + email + '">');
                                 res.write('<input type="hidden" name="username" value="' + username + '">');
-                                // console.log(result);
-                                for (var i = 0; i < result.filesOwned.length; i++) {
-                                    filename = result.filesOwned[i];
-                                    res.write('<input type="submit" name="filename" value="' + filename + '"/>');
-                                    res.write('<br><br>');
+                                if (result.filesOwned != undefined) {
+                                    for (var i = 0; i < result.filesOwned.length; i++) {
+                                        filename = result.filesOwned[i];
+                                        res.write('<input type="submit" name="filename" style="margin-right: 20px;" value="' + filename + '"/>');
+                                    }
+                                } else {
+                                    res.write('<h6>No files uploaded...</h6>');
                                 }
                                 res.write('</form>');
+                                res.write('<div style="height: 20px;"></div>');
                                 res.write('<h3>Files Sharing</h3>');
-                                res.write('<br>');
+                                res.write('<hr>');
                                 res.write('<form action="./shareFile" method="post" enctype="multipart/form-data">');
                                 if (result.filesOwned != undefined) {
                                     res.write('<input type="hidden" name="email" value="' + email + '">');
                                     res.write('<input type="hidden" name="username" value="' + username + '">');
-                                    res.write('<h4>Enter File to Share</h4>');
-                                    res.write('<select name="filetoshare">');
+                                    res.write('<div style="display: inline-block; margin-top: -20px;">');
+                                    res.write('<h6 style="display: inline-block;">Select File</h6>');
+                                    res.write('<pre style="display: inline-block;">  </pre>');
+                                    res.write('<select name="filetoshare"> style="display: inline-block;"');
                                     for (var i = 0; i < result.filesOwned.length; i++) {
                                         res.write('<option value="' + result.filesOwned[i] + '">' + result.filesOwned[i] + '</option>');
                                     }
                                     res.write('</select>');
-                                    res.write('<br>');
-                                    res.write('<br>');
-                                    res.write('<input type="text" name="persontoshare" placeholder="Enter username">');
-                                    res.write('<br>');
-                                    res.write('<br>');
+                                    res.write('</div>');
+                                    res.write('<div style="height: 10px;"></div>');
+                                    res.write('<div style="display: inline-block;">');
+                                    res.write('<h6 style="display: inline-block;padding-right: 11px;">Share with </h6>');
+                                    res.write('<input style="display: inline-block;margin-right: 5px;" type="text" name="persontoshare" placeholder="Enter username">');
+                                    res.write('</div>');
                                     res.write('<input type="submit" >');
+                                    res.write('<div style="height: 20px;"></div>');
                                 } else {
-                                    res.write('<h4>No files available to share<h5>');
+                                    res.write('<h6>No files available to share<h6>');
                                 }
                                 res.write('</form>');
-                                res.write('<h3>Files Shared With Me</h3>');
+                                res.write('<h3>Files Shared</h3>');
+                                res.write('<hr>');
                                 res.write('<form action="./downloadSharedFile" method="post" enctype="multipart/form-data">');
                                 if (result.filesSharedWithMe != undefined) {
                                     for (var i = 0; i < result.filesSharedWithMe.length; i++) {
@@ -387,27 +410,26 @@ http.createServer(function (req, res) {
                                         res.write('<input type="submit" name="filename" value="' + filename + ' : ' + result.filesSharedWithMe[i].username + '"/>');
                                         res.write('<br><br>');
                                     }
-
                                 } else {
-                                    res.write('<h4>No files shared with me...</h1>');
+                                    res.write('<h6>No files shared with me...</h6>');
                                 }
                                 res.write('</form>');
                                 res.write('<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>');
                                 res.write('<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>');
                                 res.write('<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>');
                                 res.write('</body>');
-                                console.log('file uploaded successfully');
-                                res.write('<div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-left:20px ; margin-right: 20px;">');
-                                res.write('File Uploaded Successfully');
+                                res.write('<div class="alert alert-success alert-dismissible fade show" role="alert">');
+                                res.write('Logged in Successfully');
                                 res.write('<button type="button" class="close" data-dismiss="alert" aria-label="Close">');
                                 res.write('<span aria-hidden="true">&times;</span>');
                                 res.write('</button>');
                                 res.write('</div>');
-                                // res.write('<div style="position: fixed; top:58%;left: 37.4%; width: 25.3%; text-align: center;color: green;">');
-                                // res.write('Logged in Successfully');
-                                // res.write('</div>');
-                                // res.write('</html>');
                                 res.end();
+                                //
+                                //
+                                //
+                                //
+                                //
                                 var temp = newfilepath.split(".")
                                 temp[temp.length - 1] = "dat"
                                 var newfilepathDAT = temp.join(".");
@@ -535,50 +557,59 @@ http.createServer(function (req, res) {
                                 'Content-Type': 'text/html'
                             });
                             res.write(data);
-
+                            //
+                            //
+                            //
+                            //
+                            //
                             // Adding contents to Homepage from MongoDB database 3 - on file share
                             res.write('<input type="hidden" name="email" value="' + owner + '">');
                             res.write('<input type="hidden" name="username" value="' + username + '">');
                             res.write('</form>');
+                            res.write('<div style="height: 20px;"></div>');
                             res.write('<h3>Files Owned</h3>');
+                            res.write('<hr>');
                             res.write('<form action="./downloadFile" method="post" enctype="multipart/form-data">');
                             res.write('<input type="hidden" name="email" value="' + owner + '">');
                             res.write('<input type="hidden" name="username" value="' + username + '">');
                             if (result.filesOwned != undefined) {
                                 for (var i = 0; i < result.filesOwned.length; i++) {
                                     filename = result.filesOwned[i];
-                                    res.write('<input type="submit" name="filename" value="' + filename + '"/>');
-                                    res.write('<br><br>');
+                                    res.write('<input type="submit" name="filename" style="margin-right: 20px;" value="' + filename + '"/>');
                                 }
                             } else {
-                                res.write('<h4>No files uploaded...</h1>');
+                                res.write('<h6>No files uploaded...</h6>');
                             }
                             res.write('</form>');
-
+                            res.write('<div style="height: 20px;"></div>');
                             res.write('<h3>Files Sharing</h3>');
-                            res.write('<br>');
+                            res.write('<hr>');
                             res.write('<form action="./shareFile" method="post" enctype="multipart/form-data">');
                             if (result.filesOwned != undefined) {
                                 res.write('<input type="hidden" name="email" value="' + owner + '">');
                                 res.write('<input type="hidden" name="username" value="' + username + '">');
-                                res.write('<h4>Enter File to Share</h4>');
-                                res.write('<select name="filetoshare">');
+                                res.write('<div style="display: inline-block; margin-top: -20px;">');
+                                res.write('<h6 style="display: inline-block;">Select File</h6>');
+                                res.write('<pre style="display: inline-block;">  </pre>');
+                                res.write('<select name="filetoshare"> style="display: inline-block;"');
                                 for (var i = 0; i < result.filesOwned.length; i++) {
                                     res.write('<option value="' + result.filesOwned[i] + '">' + result.filesOwned[i] + '</option>');
                                 }
                                 res.write('</select>');
-                                res.write('<br>');
-                                res.write('<br>');
-                                res.write('<input type="text" name="persontoshare" placeholder="Enter username">');
-                                res.write('<br>');
-                                res.write('<br>');
+                                res.write('</div>');
+                                res.write('<div style="height: 10px;"></div>');
+                                res.write('<div style="display: inline-block;">');
+                                res.write('<h6 style="display: inline-block;padding-right: 11px;">Share with </h6>');
+                                res.write('<input style="display: inline-block;margin-right: 5px;" type="text" name="persontoshare" placeholder="Enter username">');
+                                res.write('</div>');
                                 res.write('<input type="submit" >');
+                                res.write('<div style="height: 20px;"></div>');
                             } else {
-                                res.write('<h4>No files available to share<h5>');
+                                res.write('<h6>No files available to share<h6>');
                             }
                             res.write('</form>');
-
-                            res.write('<h3>Files Shared With Me</h3>');
+                            res.write('<h3>Files Shared</h3>');
+                            res.write('<hr>');
                             res.write('<form action="./downloadSharedFile" method="post" enctype="multipart/form-data">');
                             if (result.filesSharedWithMe != undefined) {
                                 for (var i = 0; i < result.filesSharedWithMe.length; i++) {
@@ -586,54 +617,47 @@ http.createServer(function (req, res) {
                                     res.write('<input type="submit" name="filename" value="' + filename + ' : ' + result.filesSharedWithMe[i].username + '"/>');
                                     res.write('<br><br>');
                                 }
-
                             } else {
-                                res.write('<h4>No files shared with me...</h1>');
+                                res.write('<h6>No files shared with me...</h6>');
                             }
                             res.write('</form>');
-
                             res.write('<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>');
                             res.write('<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>');
                             res.write('<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>');
                             res.write('</body>');
                             if (emailPresent == "true") {
-                                res.write('<div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-left:20px ; margin-right: 20px;">');
+                                res.write('<div class="alert alert-success alert-dismissible fade show" role="alert">');
                                 res.write('File Shared Successfully');
                                 res.write('<button type="button" class="close" data-dismiss="alert" aria-label="Close">');
                                 res.write('<span aria-hidden="true">&times;</span>');
                                 res.write('</button>');
                                 res.write('</div>');
-                                // res.write('<div style="position: fixed; top:58%;left: 37.4%; width: 25.3%; text-align: center;color: green;">');
-                                // res.write('Logged in Successfully');
-                                // res.write('</div>');
                             } else if (emailPresent == "false") {
-                                res.write('<div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-left:20px ; margin-right: 20px;">');
+                                res.write('<div class="alert alert-danger alert-dismissible fade show" role="alert">');
                                 res.write('User does not exist');
                                 res.write('<button type="button" class="close" data-dismiss="alert" aria-label="Close">');
                                 res.write('<span aria-hidden="true">&times;</span>');
                                 res.write('</button>');
                                 res.write('</div>');
-                                // res.write('<div style="position: fixed; top:58%;left: 37.4%; width: 25.3%; text-align: center;color: green;">');
-                                // res.write('Logged in Successfully');
-                                // res.write('</div>');
                             } else {
-                                res.write('<div class="alert alert-dark alert-dismissible fade show" role="alert" style="margin-left:20px ; margin-right: 20px;">');
+                                res.write('<div class="alert alert-dark alert-dismissible fade show" role="alert">');
                                 res.write('Message not updates');
                                 res.write('<button type="button" class="close" data-dismiss="alert" aria-label="Close">');
                                 res.write('<span aria-hidden="true">&times;</span>');
                                 res.write('</button>');
                                 res.write('</div>');
-                                // res.write('<div style="position: fixed; top:58%;left: 37.4%; width: 25.3%; text-align: center;color: green;">');
-                                // res.write('Logged in Successfully');
-                                // res.write('</div>');
                             }
                             res.write('</html>');
                             res.end();
+                            //
+                            //
+                            //
+                            //
+                            //
                             console.log("MAIL")
                             console.log("filename:", filename)
                             console.log("to:  ", persontoshareemail)
                             var subjectString = 'Encrypted File Shared: ' + filename
-                            // var textString = username + " has shared the following file with you: \n\n\t" + filename
                             var textString =
                                 '<div style="background-color: #f5f5f5; height: 250px;">' +
                                 '<br>' +
@@ -658,6 +682,7 @@ http.createServer(function (req, res) {
                                 '</div>' +
                                 '</div>' +
                                 '</div>'
+
                             var mailOptions = {
                                 from: 'encryptedfilesystem@gmail.com',
                                 to: persontoshareemail,

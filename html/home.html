@@ -2,16 +2,66 @@
 
 <head>
     <title>
-        EFS: UPLOAD FILE
+        Encrypted File System
     </title>
+    <script src="https://kit.fontawesome.com/2ff8c7a4e4.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        body {
+            font-size: 14px;
+            line-height: 1.8;
+            color: #222;
+            font-weight: 400;
+            font-family: 'Montserrat';
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        .a_success {
+            color: green;
+        }
+
+        .a_success:hover {
+            color: green;
+            text-decoration: none;
+        }
+
+        .a_danger {
+            color: red;
+        }
+
+        .a_danger:hover {
+            color: red;
+            text-decoration: none;
+        }
+
+        #LogoutButton {
+            background-color: white;
+            color: black;
+            border: 0;
+            position: fixed;
+            right: 0;
+            top: 10px;
+            margin-right: 10px;
+        }
+
+        #outerDiv {
+            background-color: white;
+            margin: 20px 20px 20px 20px;
+            height: 90%;
+        }
+    </style>
 </head>
 
 <body>
-    <form action="./" method="post" enctype="multipart/form-data">
-        <button type="submit" class="btn btn-primary btn-lg">Logout</button>
-    </form>
-    <form action="./fileuploaded" method="post" enctype="multipart/form-data">
-        <input type="file" name="filetoupload"><br>
-        <input type="submit" value="Upload">
+    <div id="outerDiv">
+        <form action="./" method="post" enctype="multipart/form-data" name="logoutform">
+            <button type="submit" class="btn btn-primary btn-lg" id="LogoutButton">Logout <i
+                    class="fas fa-sign-out-alt"></i></button>
+        </form>
+        <h3>Files Upload</h3>
+        <hr>
+        <form action="./fileuploaded" method="post" enctype="multipart/form-data">
+            <input type="file" name="filetoupload" style="width: 260px;">
+            <input type="submit" value="Upload">
