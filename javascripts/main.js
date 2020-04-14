@@ -403,7 +403,7 @@ http.createServer(function (req, res) {
                                 res.write('<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>');
                                 res.write('</body>');
                                 res.write('<div class="alert alert-success alert-dismissible fade show" role="alert">');
-                                res.write('Logged in Successfully');
+                                res.write('File Uploaded Successfully');
                                 res.write('<button type="button" class="close" data-dismiss="alert" aria-label="Close">');
                                 res.write('<span aria-hidden="true">&times;</span>');
                                 res.write('</button>');
