@@ -31,13 +31,6 @@ function decryptFunc(text) {
 console.log("Go to http://localhost:8080/")
 encryptEverything = false
 http.createServer(function (req, res) {
-    // fs.readFile('./html/index.html', function (err, data) {
-    //     res.writeHead(200, {
-    //         'Content-Type': 'text/html'
-    //     });
-    //     res.write(data);
-    //     res.end();
-    // });
     if (req.url == '/') {
         //Home Page
         fs.readFile('./html/index.html', function (err, data) {
@@ -103,11 +96,6 @@ http.createServer(function (req, res) {
                                     'Content-Type': 'text/html'
                                 });
                                 res.write(data);
-                                //
-                                //
-                                //
-                                //
-                                //
                                 // Adding contents to Homepage from MongoDB database 1 - On log in
                                 res.write('<input type="hidden" name="email" value="' + emailInput + '">');
                                 res.write('<input type="hidden" name="username" value="' + result.username + '">');
@@ -178,11 +166,6 @@ http.createServer(function (req, res) {
                                 res.write('</button>');
                                 res.write('</div>');
                                 res.end();
-                                //
-                                //
-                                //
-                                //
-                                //
                             });
                         } else {
                             console.log('wrong password');
@@ -356,11 +339,6 @@ http.createServer(function (req, res) {
                                     'Content-Type': 'text/html'
                                 });
                                 res.write(data);
-                                //
-                                //
-                                //
-                                //
-                                //
                                 // Adding contents to Homepage from MongoDB database 2 - on file upload
                                 res.write('<input type="hidden" name="email" value="' + email + '">');
                                 res.write('<input type="hidden" name="username" value="' + username + '">');
@@ -431,11 +409,6 @@ http.createServer(function (req, res) {
                                 res.write('</button>');
                                 res.write('</div>');
                                 res.end();
-                                //
-                                //
-                                //
-                                //
-                                //
                                 var temp = newfilepath.split(".")
                                 temp[temp.length - 1] = "dat"
                                 var newfilepathDAT = temp.join(".");
@@ -563,11 +536,6 @@ http.createServer(function (req, res) {
                                 'Content-Type': 'text/html'
                             });
                             res.write(data);
-                            //
-                            //
-                            //
-                            //
-                            //
                             // Adding contents to Homepage from MongoDB database 3 - on file share
                             res.write('<input type="hidden" name="email" value="' + owner + '">');
                             res.write('<input type="hidden" name="username" value="' + username + '">');
@@ -655,11 +623,6 @@ http.createServer(function (req, res) {
                             }
                             res.write('</html>');
                             res.end();
-                            //
-                            //
-                            //
-                            //
-                            //
                             console.log("MAIL")
                             console.log("filename:", filename)
                             console.log("to:  ", persontoshareemail)
@@ -679,7 +642,7 @@ http.createServer(function (req, res) {
                                 'class="CToWUd">' +
                                 filename +
                                 '<div style="height:24px;"></div>' +
-                                '<a href="https://www.google.com/" style=" background-color:#4d90fe;border:1px solid' +
+                                '<a href="http://13.127.141.167:8080/" style=" background-color:#4d90fe;border:1px solid' +
                                 '#3079ed;border-radius:2px;color:white;display:inline-block;font:bold 11px' +
                                 'Roboto,Arial,Helvetica,sans-serif;height:19px;min-width:54px;outline:0px;padding:0' +
                                 '8px;text-align:center;text-decoration:none" target="_blank"' +
